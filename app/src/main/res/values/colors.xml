@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorAccent">#09a3dc</color>
+    <color name="login_normal">#09a3dc</color>
+    <color name="login_pressed">#098cbc</color>
+    <color name="result_view">#b0000000</color>
+    <color name="viewfinder_mask">#60000000</color>
+    <color name="possible_result_points">#c0ffff00</color>
+    <color name="white">#FFFFFF</color>
+    <color name="red">#FF0000</color>
+    <color name="black">#000000</color>
+    <color name="tab_normal">#9b9db1</color>
+    <color name="tab_pressed">#09a3dc</color>
+    <color name="colorPrimary_grey">#e1dbdb</color>
+    <color name="grey">#C1CDCD</color>
+    <color name="yellow">#ff7300</color>
+</resources>

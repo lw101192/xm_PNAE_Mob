@@ -1,0 +1,154 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#efeff4"
+    tools:context="com.example.xm.fragment.MachineStatusFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:id="@+id/layout_status"
+            android:layout_width="match_parent"
+            android:background="#fff"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <TextView
+                    android:id="@+id/defaultview"
+                    android:gravity="center"
+                    android:textSize="25sp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="top"
+                android:background="@drawable/demobg"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/processtitle"
+                    android:background="#fff"
+                    android:layout_width="match_parent"
+                    android:textColor="@android:color/black"
+                    android:textSize="25sp"
+                    android:layout_height="wrap_content" />
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="#fff"
+                    android:orientation="horizontal">
+
+                    <HorizontalScrollView
+
+                        android:layout_width="0dp"
+                        android:layout_weight="2"
+                        android:layout_height="match_parent"
+                        android:fillViewport="true"
+                        >
+
+                        <ExpandableListView
+                            android:id="@+id/expandlist"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:cacheColorHint="#00000000"
+                            android:childDivider="@drawable/list_line"
+                            android:divider="@null"
+                            android:listSelector="#00000000"></ExpandableListView>
+                    </HorizontalScrollView>
+
+                    <HorizontalScrollView
+
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="match_parent"
+                        android:fillViewport="true">
+
+                        <android.support.v7.widget.RecyclerView
+                            android:id="@+id/templistview"
+                            android:background="#fff"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent" />
+                    </HorizontalScrollView>
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/tv_config_rt"
+                    android:background="#efeff4"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/imglayout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:visibility="gone">
+                <com.example.xm.widget.LocationView
+                    android:id="@+id/img"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    />
+            </LinearLayout>
+
+
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical|right"
+            android:orientation="horizontal">
+            <LinearLayout
+                android:id="@+id/qualitylinearlayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                >
+                <CheckBox
+                    android:id="@+id/quality"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:checked="false" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="高清"/>
+            </LinearLayout>
+            <Button
+                android:id="@+id/statusmode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="数据模式"/>
+
+
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+
+
+</FrameLayout>

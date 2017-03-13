@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">FINEBIOMob</string>
+    <string name="feedbackhint">尊敬的客户，您可以写下对我们的软件及产品的意见或建议，有了您的关注，我们会做的更好！</string>
+    <string name="repairhint">对您的设备故障点进行简要的描述。</string>
+    <string name="scan_text">将二维码放入框内, 即可自动扫描</string>
+    <string name="title_activity_bioreactor_rt_">BioreactorRT_Activity</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>

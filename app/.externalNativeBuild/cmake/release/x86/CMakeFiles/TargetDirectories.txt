@@ -1,0 +1,3 @@
+F:/Androidworkspace/Copy of FINEBIOMob - tablayoutn - mina/app/.externalNativeBuild/cmake/release/x86/CMakeFiles/IpPort.dir
+F:/Androidworkspace/Copy of FINEBIOMob - tablayoutn - mina/app/.externalNativeBuild/cmake/release/x86/CMakeFiles/edit_cache.dir
+F:/Androidworkspace/Copy of FINEBIOMob - tablayoutn - mina/app/.externalNativeBuild/cmake/release/x86/CMakeFiles/rebuild_cache.dir
