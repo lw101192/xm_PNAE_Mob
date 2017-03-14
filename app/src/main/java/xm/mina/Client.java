@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.widget.Toast;
 
@@ -44,11 +45,11 @@ public class Client {
     public ObjectOutputStream Client_out= null;
     private ExecutorService executor = Executors.newCachedThreadPool();
     private ExecutorService mainQuene = Executors.newSingleThreadExecutor();
-    Context context;
-    boolean isServerIsConnected = false;
-    boolean isLogin = false;
-    IoConnector conn = null;
-    IoSession session = null;
+    private Context context;
+    private boolean isServerIsConnected = false;
+    private boolean isLogin = false;
+    private IoConnector conn = null;
+    private IoSession session = null;
     private ClientCallBack callBack=null;
     private String userID;
     private String nickName;
@@ -56,7 +57,7 @@ public class Client {
     private boolean shortConnnection=false;
     private ReLoginThread reloginThread=null;
     public MessageBean response=null;
-    boolean isNetworkAvailable = false;
+    private boolean isNetworkAvailable = false;
     public long fileLength;
 
 
@@ -90,7 +91,6 @@ public class Client {
         session=null;
 
         isServerIsConnected = false;
-        isLogin = false;
 
         if(userID!=null)
             userID=null;
@@ -98,13 +98,13 @@ public class Client {
 
 
 
-    public void connectServer(){
+    private void connectServer(){
         if(!isServerIsConnected()){
                 this.session = createSession();
         }
     }
 
-    IoSession createSession(){
+    private IoSession createSession(){
         try {
             GetIpPort getIpPort = new GetIpPort();
             conn = new NioSocketConnector();
@@ -122,6 +122,7 @@ public class Client {
             System.out.println("连接服务器失败"+e);
             isServerIsConnected=false;
         }
+
 
         return session;
     }
@@ -201,7 +202,7 @@ public class Client {
      */
     public void sendRquestForResponse(MessageBean messageBean, boolean shortConnnection,RequestCallBack requestCallBack) {
         messageBean.getFrom().setType("mob/snaeii32");
-        if(isNetworkAvailable){
+        if(isNetworkAvailable(context)){
             this.shortConnnection = shortConnnection;
             if(shortConnnection){
                 session = createSession();
@@ -215,7 +216,9 @@ public class Client {
 
             this.requestCallBack = requestCallBack;
         }else{
+            Looper.prepare();
             Toast.makeText(this.context,"网络异常",Toast.LENGTH_SHORT).show();
+            Looper.loop();
         }
 
 
@@ -224,7 +227,7 @@ public class Client {
 
     public void sendRquest(boolean shortConnnection,MessageBean messageBean) {
         messageBean.getFrom().setType("mob/snaeii32");
-        if(isNetworkAvailable){
+        if(isNetworkAvailable(context)){
             if(shortConnnection){
                 this.shortConnnection = shortConnnection;
                 session = createSession();
@@ -245,7 +248,9 @@ public class Client {
                 }
             }
         }else{
+            Looper.prepare();
             Toast.makeText(this.context,"网络异常",Toast.LENGTH_SHORT).show();
+            Looper.loop();
         }
 
     }

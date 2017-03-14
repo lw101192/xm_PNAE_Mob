@@ -4,7 +4,10 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Copy of FINEBIOMob - tablayoutn - mina.iml" filepath="$PROJECT_DIR$/Copy of FINEBIOMob - tablayoutn - mina.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/pullrefreshlibrary/pullrefreshlibrary.iml" filepath="$PROJECT_DIR$/pullrefreshlibrary/pullrefreshlibrary.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pullrefreshlibrary/pullrefreshlibrary.iml" filepath="$PROJECT_DIR$/pullrefreshlibrary/pullrefreshlibrary.iml" />
+      <module fileurl="file://$PROJECT_DIR$/xm_PNAE_Mob.iml" filepath="$PROJECT_DIR$/xm_PNAE_Mob.iml" />
     </modules>
   </component>
 </project>
