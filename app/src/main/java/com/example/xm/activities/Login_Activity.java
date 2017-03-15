@@ -260,9 +260,12 @@ public class Login_Activity extends Activity implements OnClickListener {
 
             }
         });
-        progressdialog.setTitle("请稍等");
-        progressdialog.setMessage("登录中...");
-        progressdialog.show();
+        if(progressdialog!=null){
+            progressdialog.setTitle("请稍等");
+            progressdialog.setMessage("登录中...");
+            progressdialog.show();
+        }
+
         timer2 = new Timer();
         timer2.schedule(new TimerTask() {       //如果超过10秒无响应，则表示网络异常
 
@@ -339,6 +342,7 @@ public class Login_Activity extends Activity implements OnClickListener {
 //						}
 //						break;
                     case StaticVar.LOGIN_SUCCEED:
+                        if(progressdialog!=null)
                         progressdialog.setMessage("登录成功！");
                         if (timer2 != null)
                             timer2.cancel();

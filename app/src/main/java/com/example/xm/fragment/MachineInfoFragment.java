@@ -17,6 +17,7 @@ import com.example.xm.activities.MainActivity;
 import com.example.xm.bean.StaticVar;
 import com.example.xm.finebiopane.R;
 import com.example.xm.util.DataBaseHelper;
+import com.example.xm.util.MyApplication;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -153,7 +154,10 @@ public class MachineInfoFragment extends Fragment {
      * 获取最近一次同步时间
      */
     private void getLastSynchronizeTime() {
-        DataBaseHelper dataBaseHelper = new DataBaseHelper(getContext(), MainActivity.DB_NAME);
+        if(getActivity()==null){
+            return;
+        }
+        DataBaseHelper dataBaseHelper = new DataBaseHelper(getActivity(), MainActivity.DB_NAME);
         SQLiteDatabase sqliteDatabase = dataBaseHelper.getReadableDatabase();
         Cursor cursor = sqliteDatabase.rawQuery("select lastsynchronizetime from mymachine where id=?", new String[]{mParam1});
         if (cursor.moveToNext()) {

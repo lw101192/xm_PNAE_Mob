@@ -426,9 +426,12 @@ public class UserFragment extends Fragment implements View.OnClickListener {
                 UserBean from  = new UserBean();
                 from.setId(Client.getInstance().getUserID());
                 messageBean.setFrom(from);
-                Client.getInstance().sendRquest(false,messageBean);
 
-                Client.getInstance().closeNow(false);
+                Client.getInstance().logout(messageBean);
+
+//                Client.getInstance().sendRquest(false,messageBean);
+//                Client.getInstance().closeNow(false);
+
                 intent = new Intent(getActivity(), Login_Activity.class);
                 intent.setAction("poweroff");
                 startActivity(intent);

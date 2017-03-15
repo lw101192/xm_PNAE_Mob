@@ -234,7 +234,10 @@ public class MachineFragment extends Fragment {
      * @param data  设备信息
      */
     private void saveDataToSql(List<Map<String, String>> data) {
-        DataBaseHelper dataBaseHelper = new DataBaseHelper(getContext(), MainActivity.DB_NAME);
+        if(getActivity()==null){
+            return;
+        }
+        DataBaseHelper dataBaseHelper = new DataBaseHelper(getActivity(), MainActivity.DB_NAME);
         SQLiteDatabase sqliteDatabase = dataBaseHelper.getReadableDatabase();
         for (int i = 0; i < data.size(); i++) {
             Cursor cursor = sqliteDatabase.rawQuery("select * from mymachine where id=?", new String[]{data.get(i).get("MachineID")});

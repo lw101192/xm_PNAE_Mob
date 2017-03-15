@@ -15,6 +15,9 @@ import org.apache.mina.core.service.IoConnector;
 import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.core.session.IoSession;
 import org.apache.mina.filter.codec.ProtocolCodecFilter;
+import org.apache.mina.filter.keepalive.KeepAliveFilter;
+import org.apache.mina.filter.keepalive.KeepAliveMessageFactory;
+import org.apache.mina.filter.keepalive.KeepAliveRequestTimeoutHandler;
 import org.apache.mina.transport.socket.nio.NioSocketConnector;
 
 import java.io.ObjectInputStream;
@@ -59,6 +62,11 @@ public class Client {
     public MessageBean response=null;
     private boolean isNetworkAvailable = false;
     public long fileLength;
+
+    private static final int HEARTBEATRATE = 10;
+    /** 心跳包内容 */
+    private static final String HEARTBEATREQUEST = "0x11";
+    private static final String HEARTBEATRESPONSE = "0x12";
 
 
     public static Client getInstance(){
@@ -110,8 +118,19 @@ public class Client {
             conn = new NioSocketConnector();
             conn.setConnectTimeoutMillis(5000L);
             conn.getFilterChain().addLast("code",new ProtocolCodecFilter(new MyObjectSerializationCodecFactory()));
+
+            KeepAliveMessageFactory keepAliveMessageFactory = new KeepAliveMessageFactoryImpl();
+//            KeepAliveRequestTimeoutHandlerImpl keepAliveRequestTimeoutHandlerImpl = new KeepAliveRequestTimeoutHandlerImpl();
+            KeepAliveFilter keepAliveFilter = new KeepAliveFilter(keepAliveMessageFactory,IdleStatus.BOTH_IDLE,KeepAliveRequestTimeoutHandler.CLOSE);
+
+
+            keepAliveFilter.setForwardEvent(true);
+            keepAliveFilter.setRequestInterval(HEARTBEATRATE);
+            keepAliveFilter.setRequestTimeout(20);
+            conn.getFilterChain().addLast("heartbeat", keepAliveFilter);
+
             conn.setHandler(new ClientHandler());
-            conn.getSessionConfig().setIdleTime(IdleStatus.BOTH_IDLE,10);
+//            conn.getSessionConfig().setIdleTime(IdleStatus.BOTH_IDLE,10);
             ConnectFuture future = conn.connect(new InetSocketAddress(getIpPort.getIpString(),Integer.parseInt(getIpPort.getPortString())));
             System.out.println("IP:"+getIpPort.getIpString()+"  "+"PORT:"+Integer.parseInt(getIpPort.getPortString()));
             future.awaitUninterruptibly();
@@ -121,11 +140,65 @@ public class Client {
         }catch (Exception e){
             System.out.println("连接服务器失败"+e);
             isServerIsConnected=false;
+            callBack.onFaliure(0);
+            UserFragment.handler.sendEmptyMessage(StaticVar.OFFLINE);
         }
 
 
         return session;
     }
+//    class KeepAliveRequestTimeoutHandlerImpl implements KeepAliveRequestTimeoutHandler {
+//
+//        @Override
+//        public void keepAliveRequestTimedOut(KeepAliveFilter arg0,
+//                                             IoSession arg1) throws Exception {
+//            // TODO Auto-generated method stub
+//            System.out.println("心跳超时");
+//        }
+//
+//    }
+    /**
+     * @ClassName KeepAliveMessageFactoryImpl
+     * @Description 内部类，实现KeepAliveMessageFactory（心跳工厂）
+     * @author cruise
+     *
+     */
+    private static class KeepAliveMessageFactoryImpl implements
+            KeepAliveMessageFactory {
+
+        @Override
+        public boolean isRequest(IoSession session, Object message) {
+            System.out.println("请求心跳包信息: " + message);
+//            if (message.equals(HEARTBEATREQUEST))
+//                return true;
+            return false;
+        }
+
+        @Override
+        public boolean isResponse(IoSession session, Object message) {
+            System.out.println("响应心跳包信息: " + message);
+          if(message.equals(HEARTBEATRESPONSE))
+              return true;
+            return false;
+        }
+
+        @Override
+        public Object getRequest(IoSession session) {
+            System.out.println("请求预设信息: " + HEARTBEATREQUEST);
+            /** 返回预设语句 */
+            return HEARTBEATREQUEST;
+        }
+
+        @Override
+        public Object getResponse(IoSession session, Object request) {
+            System.out.println("响应预设信息: " + HEARTBEATRESPONSE);
+            /** 返回预设语句 */
+//            return HEARTBEATRESPONSE;
+          return null;
+        }
+
+    }
+
 
     public void login(MessageBean messageBean,ClientCallBack callBack){
 
@@ -157,6 +230,15 @@ public class Client {
 
             }
         });
+    }
+
+    public void logout(MessageBean messageBean){
+        messageBean.getFrom().setType("mob/snaeii32");
+                if(session!=null){
+                    this.session.write(messageBean);
+                }
+        closeNow(false);
+        isLogin=false;
     }
 
     public void onSuccess(int var1,String var2){

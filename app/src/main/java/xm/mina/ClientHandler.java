@@ -19,6 +19,7 @@ public class ClientHandler extends IoHandlerAdapter {
     @Override
     public void exceptionCaught(IoSession session, Throwable cause) throws Exception {
         cause.printStackTrace();
+        System.out.println("exceptionCaught");
     }
 
     @Override
@@ -70,7 +71,7 @@ public class ClientHandler extends IoHandlerAdapter {
     @Override
     public void messageSent(IoSession session, Object message) throws Exception {
         super.messageSent(session, message);
-        System.out.println("messageSent:"+((MessageBean)message).getAction());
+        System.out.println("messageSent");
     }
 
     @Override
@@ -78,6 +79,8 @@ public class ClientHandler extends IoHandlerAdapter {
         super.sessionClosed(session);
 
         Client.getInstance().closeNow(true);
+        if(Client.getInstance().isLogin())
+            MainActivity.handler.sendEmptyMessage(StaticVar.RELOGIN);
         System.out.println("sessionClosed");
     }
 
@@ -97,6 +100,6 @@ public class ClientHandler extends IoHandlerAdapter {
     public void sessionIdle(IoSession session, IdleStatus status) throws Exception {
         super.sessionIdle(session, status);
         System.out.println("sessionIdle");
-        session.write(0x00);
+        session.write(0x11);
     }
 }
