@@ -100,6 +100,5 @@ public class ClientHandler extends IoHandlerAdapter {
     public void sessionIdle(IoSession session, IdleStatus status) throws Exception {
         super.sessionIdle(session, status);
         System.out.println("sessionIdle");
-        session.write(0x11);
     }
 }

@@ -233,6 +233,8 @@ public class HistroyFragment extends Fragment  {
      */
     private List<String> getids() {
         ids.clear();
+        if(getActivity()==null)
+            return null;
         DataBaseHelper dataBaseHelper = new DataBaseHelper(getContext(), MainActivity.DB_NAME);
         SQLiteDatabase sqliteDatabase = dataBaseHelper.getReadableDatabase();
         Cursor cursor = sqliteDatabase.rawQuery("select distinct id from histroy", null);
