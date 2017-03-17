@@ -16,6 +16,8 @@ import com.xm.Bean.MessageBean;
  * Created by liuwei on 2017/1/20.
  */
 public class ClientHandler extends IoHandlerAdapter {
+
+    private boolean isKicked = false;
     @Override
     public void exceptionCaught(IoSession session, Throwable cause) throws Exception {
         cause.printStackTrace();
@@ -47,8 +49,12 @@ public class ClientHandler extends IoHandlerAdapter {
 
                     break;
                 case "kickoff":
-                    MainActivity.handler.sendEmptyMessage(StaticVar.LADNDING_IN_DIFFERENT_PLACES);
-                    Client.getInstance().closeNow(true);
+                    isKicked = true;
+                    System.out.println("kickoff"+session.getLocalAddress()+" "+Client.getInstance().getSession().getLocalAddress());
+//                    if(session==Client.getInstance().getSession()){
+                        MainActivity.handler.sendEmptyMessage(StaticVar.LADNDING_IN_DIFFERENT_PLACES);
+                        Client.getInstance().closeNow(true);
+//                    }
                     break;
                 case "SendCmd":
                     Object[] objmsg = new Object[3];
@@ -77,11 +83,11 @@ public class ClientHandler extends IoHandlerAdapter {
     @Override
     public void sessionClosed(IoSession session) throws Exception {
         super.sessionClosed(session);
-
+        System.out.println("sessionClosed"+session.getLocalAddress());
         Client.getInstance().closeNow(true);
-        if(Client.getInstance().isLogin())
+        if(Client.getInstance().isLogin()&&!isKicked)
             MainActivity.handler.sendEmptyMessage(StaticVar.RELOGIN);
-        System.out.println("sessionClosed");
+
     }
 
     @Override

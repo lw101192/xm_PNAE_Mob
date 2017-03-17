@@ -76,6 +76,10 @@ public class Client {
         return instance;
     }
 
+    public IoSession getSession(){
+        return  session;
+    }
+
     public void init(Context context){
         this.context = context.getApplicationContext();
 
@@ -107,6 +111,7 @@ public class Client {
 
 
     private void connectServer(){
+        closeNow(true);
         if(!isServerIsConnected()){
                 this.session = createSession();
         }
@@ -136,7 +141,7 @@ public class Client {
             future.awaitUninterruptibly();
             session = future.getSession();
             isServerIsConnected=true;
-            System.out.println("连接服务器成功");
+            System.out.println("连接服务器成功"+session.getLocalAddress());
         }catch (Exception e){
             System.out.println("连接服务器失败"+e);
             isServerIsConnected=false;
@@ -233,12 +238,15 @@ public class Client {
     }
 
     public void logout(MessageBean messageBean){
+        isLogin=false;//先置位isLogin，后closeNow(true)
         messageBean.getFrom().setType("mob/snaeii32");
                 if(session!=null){
-                    this.session.write(messageBean);
+                    session.write(messageBean);
                 }
-        closeNow(false);
-        isLogin=false;
+        System.out.println("closenow"+session.getLocalAddress());
+        closeNow(true);
+
+
     }
 
     public void onSuccess(int var1,String var2){
