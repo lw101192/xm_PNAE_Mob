@@ -488,6 +488,8 @@ public class Login_Activity extends Activity implements OnClickListener {
             progressdialog.dismiss();
             progressdialog = null;
         }
+        if(timer2!=null)
+            timer2.cancel();
 
         super.onDestroy();
     }

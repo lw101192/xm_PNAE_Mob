@@ -83,6 +83,8 @@ public class HistroyFragment extends Fragment  {
      */
     private void getdata() {
         items.clear();
+        if(getContext()==null)
+            return;
         DataBaseHelper dataBaseHelper = new DataBaseHelper(getContext(), MainActivity.DB_NAME);
         SQLiteDatabase sqliteDatabase = dataBaseHelper.getReadableDatabase();
         for (int i = 0; i < ids.size(); i++) {
