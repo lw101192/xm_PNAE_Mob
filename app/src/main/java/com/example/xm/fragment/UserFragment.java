@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
@@ -15,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import xm.mina.RequestCallBack;
 import com.example.xm.activities.WebView_Activity;
@@ -28,6 +30,7 @@ import com.example.xm.finebiopane.R;
 import xm.mina.Client;
 
 import com.example.xm.widget.CustomadeDialog;
+import com.example.xm.widget.LoadingDialog;
 import com.xm.Bean.MessageBean;
 import com.xm.Bean.UserBean;
 
@@ -70,6 +73,8 @@ public class UserFragment extends Fragment implements View.OnClickListener {
     private Intent intent;
     public static Handler handler;
     private ProgressDialog progressDialog;
+    private LoadingDialog loadingDialog;
+    private CountDownTimer countDownTimer;
 
     public UserFragment() {
         // Required empty public constructor
@@ -100,6 +105,9 @@ public class UserFragment extends Fragment implements View.OnClickListener {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+
+
     }
 
     @Override
@@ -109,6 +117,9 @@ public class UserFragment extends Fragment implements View.OnClickListener {
         View view = inflater.inflate(R.layout.fragment_user, container, false);
         init(view);
         iniHandler();
+
+        if(!Client.getInstance().isNetworkAvailable(getActivity()))
+            UserFragment.handler.sendEmptyMessage(StaticVar.OFFLINE);
         return view;
     }
 
@@ -117,6 +128,9 @@ public class UserFragment extends Fragment implements View.OnClickListener {
             @Override
             public void handleMessage(Message msg) {
                 switch (msg.what){
+                    case StaticVar.NETWORK_FAULT:
+                        Toast.makeText(getActivity(),"网络异常",Toast.LENGTH_SHORT).show();
+                        break;
                     case StaticVar.OFFLINE:
                         user.setText("离线");
                         break;
@@ -137,6 +151,10 @@ public class UserFragment extends Fragment implements View.OnClickListener {
 
                         break;
                     case CHECKVERSION:
+                        countDownTimer.cancel();
+                        if(loadingDialog!=null&&loadingDialog.isShowing())
+                            loadingDialog.dismiss();
+
 
                         try {
                             JSONObject jsonObject = new JSONObject(msg.obj.toString());
@@ -402,16 +420,34 @@ public class UserFragment extends Fragment implements View.OnClickListener {
 //                        Toast.makeText(getContext(), "未登录到服务器", Toast.LENGTH_LONG).show();
 //                    }
 
+                if(loadingDialog==null){
+                    loadingDialog = new LoadingDialog(getActivity(),"检查更新...");
+                }
+                loadingDialog.show();
+
+                countDownTimer =new CountDownTimer(10000,1000) {
+                    @Override
+                    public void onTick(long millisUntilFinished) {
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        handler.sendEmptyMessage(StaticVar.NETWORK_FAULT);
+                    }
+                }.start();
+
                 MessageBean requestBean = Client.getInstance().getDownloadFileRequestBean("mob/snaeii32","version.txt");
                 Client.getInstance().sendRquestForResponse(requestBean, false, new RequestCallBack<MessageBean>() {
                     @Override
                     public void Response(MessageBean messageBean) {
                         try {
+
                             String infoJson = new String(messageBean.getContent().getBytecontent(),"utf-8");
                             JSONObject jsonObject = new JSONObject(infoJson);
 
 
                            Message.obtain(handler,CHECKVERSION,jsonObject).sendToTarget();
+
                         } catch (Exception e) {
                             System.out.println(e);
                         }

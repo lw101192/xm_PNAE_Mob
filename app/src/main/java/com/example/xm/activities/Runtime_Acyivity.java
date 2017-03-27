@@ -110,11 +110,13 @@ public class Runtime_Acyivity extends AppCompatActivity implements MachineInfoFr
 
                         if (timer != null)
                             timer.cancel();
+
+                        handler.sendEmptyMessage(3);
                         if (progressDialog != null) {
-                            progressDialog.setMessage("同步成功");
-                            Message message = new Message();
-                            message.what = 3;
-                            handler.sendMessageDelayed(message, 2000);
+//                            progressDialog.setMessage("同步成功");
+//                            Message message = new Message();
+//                            message.what = 3;
+//                            handler.sendMessageDelayed(message, 2000);
                             String s = "";
                             SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                             s = simpleDateFormat.format(new Date(System.currentTimeMillis()));
@@ -129,6 +131,21 @@ public class Runtime_Acyivity extends AppCompatActivity implements MachineInfoFr
                         }
 
                         break;
+                    case StaticVar.SYNCHRONOUS_FILED:
+
+                        if (timer != null)
+                            timer.cancel();
+
+                        handler.sendEmptyMessage(3);
+//                        if (progressDialog != null) {
+//                            progressDialog.setMessage("同步失败");
+//                            Message message = new Message();
+//                            message.what = 3;
+//                            handler.sendMessageDelayed(message, 2000);
+//
+//                        }
+
+                        break;
 
                     case 2:
                         if (progressDialog != null) {
@@ -139,10 +156,6 @@ public class Runtime_Acyivity extends AppCompatActivity implements MachineInfoFr
                             timer.cancel();
                         Toast.makeText(Runtime_Acyivity.this, "目标已下线", Toast.LENGTH_SHORT).show();
                         break;
-                    case 4:
-
-                        Toast.makeText(Runtime_Acyivity.this, "消息发送成功", Toast.LENGTH_SHORT).show();
-                        break;
                     case 3:
                         if (timer != null)
                             timer.cancel();
@@ -150,8 +163,13 @@ public class Runtime_Acyivity extends AppCompatActivity implements MachineInfoFr
                             progressDialog.dismiss();
                             progressDialog = null;
                         }
-                        MachineInfoFragment.handler.sendEmptyMessage(StaticVar.SYNCHRONOUS_SUCCEED);
+//                        MachineInfoFragment.handler.sendEmptyMessage(StaticVar.SYNCHRONOUS_SUCCEED);
                         break;
+                    case 4:
+
+                        Toast.makeText(Runtime_Acyivity.this, "消息发送成功", Toast.LENGTH_SHORT).show();
+                        break;
+
                     case StaticVar.QUERY_CONFIG:
                         if (msg.obj.toString().equals("是"))
                             cb_push.setChecked(true);
@@ -163,7 +181,7 @@ public class Runtime_Acyivity extends AppCompatActivity implements MachineInfoFr
                         start_stop = "启动";
                         if (progressDialog != null)
                         progressDialog.setMessage("同步成功");
-                        handler.sendEmptyMessageDelayed(StaticVar.SYNCHRONOUS_SUCCEED, 2000);
+                        handler.sendEmptyMessageDelayed(StaticVar.SYNCHRONOUS_SUCCEED, 1000);
                        MachineStatusFragment.handler.sendEmptyMessage(StaticVar.SYNCHRONOUS_NULL);
                         break;
 //                    case 4:
@@ -197,10 +215,21 @@ public class Runtime_Acyivity extends AppCompatActivity implements MachineInfoFr
                         }
                         break;
                     case StaticVar.SYNCHRONOUS_RESULT_IMAGE:
-                        if (progressDialog != null)
-                        progressDialog.setMessage("同步成功");
-                        handler.sendEmptyMessageDelayed(StaticVar.SYNCHRONOUS_SUCCEED, 2000);
-                        Message.obtain(MachineStatusFragment.handler,StaticVar.SYNCHRONOUS_RESULT_IMAGE,msg.obj).sendToTarget();
+//                        System.out.println("msg.obj.length>>>"+msg.obj.toString().length());
+
+                            if(msg.obj.toString().length()>0){
+                                if(progressDialog != null){
+                                    progressDialog.setMessage("同步成功");
+                                    handler.sendEmptyMessageDelayed(StaticVar.SYNCHRONOUS_SUCCEED, 1000);
+                                    Message.obtain(MachineStatusFragment.handler,StaticVar.SYNCHRONOUS_RESULT_IMAGE,msg.obj).sendToTarget();
+                                }
+                            }else{
+                                if(progressDialog != null){
+                                    progressDialog.setMessage("同步失败");
+                                    handler.sendEmptyMessageDelayed(StaticVar.SYNCHRONOUS_FILED, 1000);
+                                }
+                            }
+
                         break;
                     case StaticVar.SYNCHRONOUS_REQUEST:
                         synchornize();
@@ -443,7 +472,7 @@ public class Runtime_Acyivity extends AppCompatActivity implements MachineInfoFr
 
                 }
             }
-        }, 15000);
+        }, 10000);
         progressDialog = new ProgressDialog(Runtime_Acyivity.this);
         progressDialog.setMessage("同步中...");
         progressDialog.show();

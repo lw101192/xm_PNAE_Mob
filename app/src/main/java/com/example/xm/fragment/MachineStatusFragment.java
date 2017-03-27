@@ -139,7 +139,7 @@ public class MachineStatusFragment extends Fragment {
                         ((FrameLayout) view.findViewById(R.id.layout_status)).getChildAt(2).setVisibility(View.INVISIBLE);
                         break;
                     case StaticVar.SYNCHRONOUS_RESULT_IMAGE:
-                        Runtime_Acyivity.handler.sendEmptyMessage(StaticVar.SYNCHRONOUS_SUCCEED);
+//                        Runtime_Acyivity.handler.sendEmptyMessage(StaticVar.SYNCHRONOUS_SUCCEED);
                         imglayout.setVisibility(View.VISIBLE);
                         img.setImageBitmap(Util.GenerateImage(msg.obj.toString()));
                         ((FrameLayout) view.findViewById(R.id.layout_status)).getChildAt(0).setVisibility(View.GONE);

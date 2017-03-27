@@ -34,4 +34,6 @@ public class StaticVar {
     public static final int SYNCHRONOUS_RESULT_IMAGE = 31;
     public static final int OFFLINE = 32;
     public static final int ONLINE = 33;
+    public static final int SYNCHRONOUS_FILED = 34;
+    public static final int CLEAR_UNREAD = 35;
 }

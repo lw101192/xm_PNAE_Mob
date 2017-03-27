@@ -385,7 +385,9 @@ public class Client {
                 if(Client.getInstance().isLogin()&&session==null)
                 MainActivity.handler.sendEmptyMessage(StaticVar.RELOGIN);
             }else{
-                UserFragment.handler.sendEmptyMessage(StaticVar.OFFLINE);
+                if(UserFragment.handler!=null)
+                    UserFragment.handler.sendEmptyMessage(StaticVar.OFFLINE);
+
                 isServerIsConnected = false;
                 session = null;
             }

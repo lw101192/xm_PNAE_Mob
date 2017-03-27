@@ -58,6 +58,7 @@ import com.xm.Bean.UserBean;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -113,8 +114,12 @@ public class MainActivity extends AppCompatActivity implements MachineFragment.O
         if (getIntent().getAction() != null && getIntent().getAction().equals("loginsucceed")) {
             handler.sendEmptyMessage(StaticVar.LOGIN_SUCCEED);
         }
-        if (getIntent().getAction() != null && getIntent().getAction().equals("autoLogin"))
-            autoLogin();
+        if (getIntent().getAction() != null && getIntent().getAction().equals("autoLogin")){
+            if(Client.getInstance().isNetworkAvailable(getApplicationContext())){
+                autoLogin();
+            }
+        }
+
         mainActivity = this;
         USERNAME = preferences.getString("username", null);
         DB_NAME = USERNAME + "_bioreactor_db";
@@ -392,7 +397,7 @@ public class MainActivity extends AppCompatActivity implements MachineFragment.O
                     @Override
                     public void run() {
                         // TODO Auto-generated method stub
-                        if (progressDialog.isShowing()){
+                        if (progressDialog!=null&&progressDialog.isShowing()){
                             handler.sendEmptyMessage(StaticVar.LOGIN_FAILED);
 
                         }
@@ -623,9 +628,6 @@ public class MainActivity extends AppCompatActivity implements MachineFragment.O
                         } catch (JSONException e) {
                             Message.obtain(Runtime_Acyivity.handler,StaticVar.SYNCHRONOUS_RESULT_IMAGE,object[2]).sendToTarget();
                         }
-
-
-
 
                         break;
 //
@@ -889,8 +891,56 @@ public class MainActivity extends AppCompatActivity implements MachineFragment.O
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        setIconsVisible(menu,true);
         getMenuInflater().inflate(R.menu.mainmenu, menu);
         return true;
+    }
+
+    /**
+     * 解决menu不显示图标问题
+     * @param menu
+     * @param flag
+     */
+    private void setIconsVisible(Menu menu, boolean flag) {
+        //判断menu是否为空
+        if(menu != null) {
+            try {
+                //如果不为空,就反射拿到menu的setOptionalIconsVisible方法
+                Method method = menu.getClass().getDeclaredMethod("setOptionalIconsVisible", Boolean.TYPE);
+                //暴力访问该方法
+                method.setAccessible(true);
+                //调用该方法显示icon
+                method.invoke(menu, flag);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {        //动态调整toolbar的菜单选项
+
+        switch (viewPager.getCurrentItem()) {
+            case 0:
+                menu.findItem(R.id.scan).setVisible(false);
+                menu.findItem(R.id.add).setVisible(false);
+                menu.findItem(R.id.clear).setVisible(true);
+                menu.findItem(R.id.isread).setVisible(true);
+                break;
+            case 1:
+                menu.findItem(R.id.scan).setVisible(true);
+                menu.findItem(R.id.add).setVisible(true);
+                menu.findItem(R.id.clear).setVisible(false);
+                menu.findItem(R.id.isread).setVisible(false);
+                break;
+            case 2:
+                menu.findItem(R.id.scan).setVisible(false);
+                menu.findItem(R.id.add).setVisible(false);
+                menu.findItem(R.id.clear).setVisible(false);
+                menu.findItem(R.id.isread).setVisible(false);
+                break;
+        }
+        return super.onPrepareOptionsMenu(menu);
     }
 
     @Override
@@ -898,6 +948,9 @@ public class MainActivity extends AppCompatActivity implements MachineFragment.O
         switch (item.getItemId()) {
             case R.id.clear:
                 HistroyFragment.handler.sendEmptyMessage(StaticVar.CLEAR_HISTROY);
+                break;
+            case R.id.isread:
+                HistroyFragment.handler.sendEmptyMessage(StaticVar.CLEAR_UNREAD);
                 break;
             case R.id.scan:
                 Intent intent = new Intent();
@@ -966,27 +1019,7 @@ public class MainActivity extends AppCompatActivity implements MachineFragment.O
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {        //动态调整toolbar的菜单选项
-        switch (viewPager.getCurrentItem()) {
-            case 0:
-                menu.findItem(R.id.scan).setVisible(false);
-                menu.findItem(R.id.add).setVisible(false);
-                menu.findItem(R.id.clear).setVisible(true);
-                break;
-            case 1:
-                menu.findItem(R.id.scan).setVisible(true);
-                menu.findItem(R.id.add).setVisible(true);
-                menu.findItem(R.id.clear).setVisible(false);
-                break;
-            case 2:
-                menu.findItem(R.id.scan).setVisible(false);
-                menu.findItem(R.id.add).setVisible(false);
-                menu.findItem(R.id.clear).setVisible(false);
-                break;
-        }
-        return super.onPrepareOptionsMenu(menu);
-    }
+
 
 
     @Override

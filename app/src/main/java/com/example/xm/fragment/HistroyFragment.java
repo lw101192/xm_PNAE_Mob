@@ -224,6 +224,12 @@ public class HistroyFragment extends Fragment  {
                         sqLiteDatabase.delete("histroy", null, null);
                         sqLiteDatabase.close();
                         break;
+                    case StaticVar.CLEAR_UNREAD:
+                        for(int i=0;i<items.size();i++)
+                        clearUnReadNum(items.get(i).getId());
+
+                        adapter.notifyDataSetChanged();
+                        break;
                 }
             }
         };
