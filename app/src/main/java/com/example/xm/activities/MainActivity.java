@@ -46,6 +46,8 @@ import com.example.xm.fragment.HistroyFragment;
 import com.example.xm.fragment.MachineFragment;
 import com.example.xm.fragment.MachineMessageFragment;
 import com.example.xm.fragment.UserFragment;
+import com.example.xm.service.ListenerService;
+import com.example.xm.service.RemoteKeepLiveService;
 import com.example.xm.thread.ReLoginThread;
 import xm.mina.Client;
 import com.example.xm.util.DataBaseHelper;
@@ -238,7 +240,7 @@ public class MainActivity extends AppCompatActivity implements MachineFragment.O
                 .setContentText("测试内容")
                 .setContentIntent(PendingIntent.getActivity(this, 1, new Intent(this,MainActivity.class), PendingIntent.FLAG_CANCEL_CURRENT))
 //		.setNumber(number)//显示数量
-                .setTicker("测试通知来啦")//通知首次出现在通知栏，带上升动画效果的
+//                .setTicker("测试通知来啦")//通知首次出现在通知栏，带上升动画效果的
 
                 .setPriority(Notification.DEFAULT_ALL)//设置该通知优先级
 //		.setAutoCancel(true)//设置这个标志当用户单击面板就可以让通知将自动取消
@@ -505,6 +507,11 @@ public class MainActivity extends AppCompatActivity implements MachineFragment.O
                         //finish();
                         break;
                     case StaticVar.LOGIN_SUCCEED:
+                        startService(new Intent(MainActivity.this, ListenerService.class));
+                        startService(new Intent(MainActivity.this, RemoteKeepLiveService.class));
+
+
+
                         if (ReLoginThread.getReLoginThread() != null) {
                             ReLoginThread.getInstance().stopReconnectionThread();
                         }
@@ -591,9 +598,9 @@ public class MainActivity extends AppCompatActivity implements MachineFragment.O
                                             try {
                                                 mBuilder.setContentTitle("核酸提取仪")
                                                         .setWhen(System.currentTimeMillis())//通知产生的时间，会在通知信息里显示
-                                                        .setContentText(jsonObject.getString("noticecontent"))
+                                                        .setContentText(jsonObject.getString("noticecontent"));
 //						.setNumber(number)//显示数量
-                                                        .setTicker("核酸提取仪通知来啦");//通知首次出现在通知栏，带上升动画效果的
+//                                                        .setTicker("核酸提取仪通知来啦");//通知首次出现在通知栏，带上升动画效果的
                                                 mNotificationManager.notify(notificationID++, mBuilder.build());
                                             } catch (Exception e) {
 

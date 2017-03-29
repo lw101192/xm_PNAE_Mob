@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -67,15 +69,30 @@ public class MachineAdapter extends BaseAdapter {
 		viewHolder.MachineID = data.get(position).get("MachineID");
 		viewHolder.CreateTime = data.get(position).get("CreateTime");
 		if(data.get(position).get("Online").toString().equals("是")){
-			viewHolder.itemImage.setImageResource(R.drawable.machineonline);
+
+			viewHolder.itemImage.setImageBitmap(getBitmap(R.drawable.machineonline,5));
 			viewHolder.Online="是";
 		}else {
-			viewHolder.itemImage.setImageResource(R.drawable.machineoffline);
+			viewHolder.itemImage.setImageBitmap(getBitmap(R.drawable.machineoffline,5));
 			viewHolder.Online="否";
 		}
 		return convertView;
 	}
-	
+
+	/**
+	 * 加载图片
+	 * @param resId 资源ID
+	 * @param inSampleSize	宽高缩放倍数
+     * @return
+     */
+	private Bitmap getBitmap(int resId,int inSampleSize) {
+		Bitmap bitmap = null;
+		BitmapFactory.Options options = new BitmapFactory.Options();
+		options.inSampleSize = inSampleSize;
+		bitmap = BitmapFactory.decodeResource(activity.getResources(),resId,options);
+		return bitmap;
+	}
+
 	public class ViewHolder{
 		public TextView itemText;		//设备名称
 		public ImageView itemImage;		//状态图片

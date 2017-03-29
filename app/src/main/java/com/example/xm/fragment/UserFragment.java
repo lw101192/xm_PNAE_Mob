@@ -118,7 +118,7 @@ public class UserFragment extends Fragment implements View.OnClickListener {
         init(view);
         iniHandler();
 
-        if(!Client.getInstance().isNetworkAvailable(getActivity()))
+        if(!Client.getInstance().isNetworkAvailable(getActivity())||Client.getInstance().getSession()==null)
             UserFragment.handler.sendEmptyMessage(StaticVar.OFFLINE);
         return view;
     }

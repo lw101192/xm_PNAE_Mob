@@ -44,8 +44,8 @@ public class Client {
     public static final String TAG = "Client";
     private static Client instance = null;
     public Socket Client_Socket = null;
-    public ObjectInputStream Client_in= null;
-    public ObjectOutputStream Client_out= null;
+    public ObjectInputStream Client_in = null;
+    public ObjectOutputStream Client_out = null;
     private ExecutorService executor = Executors.newCachedThreadPool();
     private ExecutorService mainQuene = Executors.newSingleThreadExecutor();
     private Context context;
@@ -53,80 +53,80 @@ public class Client {
     private boolean isLogin = false;
     private IoConnector conn = null;
     private IoSession session = null;
-    private ClientCallBack callBack=null;
+    private ClientCallBack callBack = null;
     private String userID;
     private String nickName;
     private RequestCallBack requestCallBack;
-    private boolean shortConnnection=false;
-    private ReLoginThread reloginThread=null;
-    public MessageBean response=null;
+    private boolean shortConnnection = false;
+    private ReLoginThread reloginThread = null;
+    public MessageBean response = null;
     private boolean isNetworkAvailable = false;
     public long fileLength;
 
     private static final int HEARTBEATRATE = 10;
-    /** 心跳包内容 */
+    /**
+     * 心跳包内容
+     */
     private static final String HEARTBEATREQUEST = "0x11";
     private static final String HEARTBEATRESPONSE = "0x12";
 
 
-    public static Client getInstance(){
-        if(instance==null){
+    public static Client getInstance() {
+        if (instance == null) {
             instance = new Client();
         }
         return instance;
     }
 
-    public IoSession getSession(){
-        return  session;
+    public IoSession getSession() {
+        return session;
     }
 
-    public void init(Context context){
+    public void init(Context context) {
         this.context = context.getApplicationContext();
 
         registerBraodCast();
 
 
-
     }
 
-    public void closeNow(boolean now){
-        if(conn!=null)
-        conn.dispose();
-        conn=null;
-        if(session!=null){
-            if(now)
+    public void closeNow(boolean now) {
+        if (conn != null)
+            conn.dispose();
+        conn = null;
+        if (session != null) {
+            if (now)
                 session.closeNow();
             else
                 session.closeOnFlush();
         }
 
-        session=null;
+        session = null;
 
         isServerIsConnected = false;
 
-        if(userID!=null)
-            userID=null;
+        if (userID != null)
+            userID = null;
     }
 
 
-
-    private void connectServer(){
+    private void connectServer() {
         closeNow(true);
-        if(!isServerIsConnected()){
-                this.session = createSession();
+        if (!isServerIsConnected()) {
+            this.session = createSession();
         }
     }
 
-    private IoSession createSession(){
+    private IoSession createSession() {
         try {
             GetIpPort getIpPort = new GetIpPort();
             conn = new NioSocketConnector();
             conn.setConnectTimeoutMillis(5000L);
-            conn.getFilterChain().addLast("code",new ProtocolCodecFilter(new MyObjectSerializationCodecFactory()));
+            conn.getFilterChain().addLast("code", new ProtocolCodecFilter(new MyObjectSerializationCodecFactory()));
 
             KeepAliveMessageFactory keepAliveMessageFactory = new KeepAliveMessageFactoryImpl();
 //            KeepAliveRequestTimeoutHandlerImpl keepAliveRequestTimeoutHandlerImpl = new KeepAliveRequestTimeoutHandlerImpl();
-            KeepAliveFilter keepAliveFilter = new KeepAliveFilter(keepAliveMessageFactory,IdleStatus.BOTH_IDLE,KeepAliveRequestTimeoutHandler.CLOSE);
+            KeepAliveFilter keepAliveFilter = new KeepAliveFilter(keepAliveMessageFactory, IdleStatus.BOTH_IDLE, KeepAliveRequestTimeoutHandler.CLOSE);
 
 
             keepAliveFilter.setForwardEvent(true);
@@ -136,15 +136,15 @@ public class Client {
 
             conn.setHandler(new ClientHandler());
 //            conn.getSessionConfig().setIdleTime(IdleStatus.BOTH_IDLE,10);
-            ConnectFuture future = conn.connect(new InetSocketAddress(getIpPort.getIpString(),Integer.parseInt(getIpPort.getPortString())));
-            System.out.println("IP:"+getIpPort.getIpString()+"  "+"PORT:"+Integer.parseInt(getIpPort.getPortString()));
+            ConnectFuture future = conn.connect(new InetSocketAddress(getIpPort.getIpString(), Integer.parseInt(getIpPort.getPortString())));
+            System.out.println("IP:" + getIpPort.getIpString() + "  " + "PORT:" + Integer.parseInt(getIpPort.getPortString()));
             future.awaitUninterruptibly();
             session = future.getSession();
-            isServerIsConnected=true;
-            System.out.println("连接服务器成功"+session.getLocalAddress());
-        }catch (Exception e){
-            System.out.println("连接服务器失败"+e);
-            isServerIsConnected=false;
+            isServerIsConnected = true;
+            System.out.println("连接服务器成功" + session.getLocalAddress());
+        } catch (Exception e) {
+            System.out.println("连接服务器失败" + e);
+            isServerIsConnected = false;
             callBack.onFaliure(0);
             UserFragment.handler.sendEmptyMessage(StaticVar.OFFLINE);
         }
@@ -162,11 +162,11 @@ public class Client {
 //        }
 //
 //    }
+
     /**
+     * @author cruise
      * @ClassName KeepAliveMessageFactoryImpl
      * @Description 内部类，实现KeepAliveMessageFactory（心跳工厂）
-     * @author cruise
-     *
      */
     private static class KeepAliveMessageFactoryImpl implements
             KeepAliveMessageFactory {
@@ -182,8 +182,8 @@ public class Client {
         @Override
         public boolean isResponse(IoSession session, Object message) {
             System.out.println("响应心跳包信息: " + message);
-          if(message.equals(HEARTBEATRESPONSE))
-              return true;
+            if (message.equals(HEARTBEATRESPONSE))
+                return true;
             return false;
         }
 
@@ -199,19 +199,19 @@ public class Client {
             System.out.println("响应预设信息: " + HEARTBEATRESPONSE);
             /** 返回预设语句 */
 //            return HEARTBEATRESPONSE;
-          return null;
+            return null;
         }
 
     }
 
 
-    public void login(MessageBean messageBean,ClientCallBack callBack){
+    public void login(MessageBean messageBean, ClientCallBack callBack) {
 
-        if(callBack==null){
-            throw  new IllegalArgumentException("callback is null!");
-        }else if(!TextUtils.isEmpty(messageBean.getFrom().getId())&&!TextUtils.isEmpty(messageBean.getFrom().getOriginpw())){
-            _login(messageBean,callBack,false);
-        }else{
+        if (callBack == null) {
+            throw new IllegalArgumentException("callback is null!");
+        } else if (!TextUtils.isEmpty(messageBean.getFrom().getId()) && !TextUtils.isEmpty(messageBean.getFrom().getOriginpw())) {
+            _login(messageBean, callBack, false);
+        } else {
             throw new IllegalArgumentException("username or password is illeagal!");
         }
 
@@ -224,52 +224,53 @@ public class Client {
         this.excute(new Runnable() {
             @Override
             public void run() {
-                System.out.println("Client.this.isServerIsConnected()>>>"+Client.this.isServerIsConnected());
-                if(!Client.this.isServerIsConnected()){
+                System.out.println("Client.this.isServerIsConnected()>>>" + Client.this.isServerIsConnected());
+                if (!Client.this.isServerIsConnected()) {
                     connectServer();
                 }
 
-                if(session!=null)
-                        session.write(messageBean);
+                if (session != null)
+                    session.write(messageBean);
 
 
             }
         });
     }
 
-    public void logout(MessageBean messageBean){
-        isLogin=false;//先置位isLogin，后closeNow(true)
+    public void logout(MessageBean messageBean) {
+        isLogin = false;//先置位isLogin，后closeNow(true)
         messageBean.getFrom().setType("mob/snaeii32");
-                if(session!=null){
-                    session.write(messageBean);
-                }
-        System.out.println("closenow"+session.getLocalAddress());
+        if (session != null) {
+            session.write(messageBean);
+        }
+        System.out.println("closenow" + session.getLocalAddress());
         closeNow(true);
 
 
     }
 
-    public void onSuccess(int var1,String var2){
-        callBack.onSuccess(var1,var2);
+    public void onSuccess(int var1, String var2) {
+        callBack.onSuccess(var1, var2);
     }
 
-    public void onFaliure(int var1){
+    public void onFaliure(int var1) {
         closeNow(true);
         callBack.onFaliure(var1);
     }
 
-    public void onProgress(int var1,String var2){
-        callBack.onProgress(var1,var2);
+    public void onProgress(int var1, String var2) {
+        callBack.onProgress(var1, var2);
     }
 
     public boolean isServerIsConnected() {
         return isServerIsConnected;
     }
+
     public boolean isLogin() {
         return isLogin;
     }
 
-    void excute(Runnable var){
+    void excute(Runnable var) {
         this.executor.execute(var);
     }
 
@@ -286,42 +287,42 @@ public class Client {
 
     /**
      * 发送获得响应的请求
+     *
      * @param messageBean
      * @param shortConnnection true为短链接
      * @param requestCallBack
      */
-    public void sendRquestForResponse(MessageBean messageBean, boolean shortConnnection,RequestCallBack requestCallBack) {
+    public void sendRquestForResponse(MessageBean messageBean, boolean shortConnnection, RequestCallBack requestCallBack) {
         messageBean.getFrom().setType("mob/snaeii32");
-        if(isNetworkAvailable(context)){
+        if (isNetworkAvailable(context)) {
             this.shortConnnection = shortConnnection;
-            if(shortConnnection){
+            if (shortConnnection) {
                 session = createSession();
             }
-            if(session!=null){
+            if (session != null) {
 
                 session.write(messageBean);
-            }else{
+            } else {
                 MainActivity.handler.sendEmptyMessage(StaticVar.RELOGIN);
             }
 
             this.requestCallBack = requestCallBack;
-        }else{
+        } else {
             Looper.prepare();
-            Toast.makeText(this.context,"网络异常",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this.context, "网络异常", Toast.LENGTH_SHORT).show();
             Looper.loop();
         }
 
 
-
     }
 
-    public void sendRquest(boolean shortConnnection,MessageBean messageBean) {
+    public void sendRquest(boolean shortConnnection, MessageBean messageBean) {
         messageBean.getFrom().setType("mob/snaeii32");
-        if(isNetworkAvailable(context)){
-            if(shortConnnection){
+        if (isNetworkAvailable(context)) {
+            if (shortConnnection) {
                 this.shortConnnection = shortConnnection;
                 session = createSession();
-                if(session!=null){
+                if (session != null) {
 
                     session.write(messageBean);
                 }
@@ -329,36 +330,35 @@ public class Client {
 //            session.getCloseFuture().awaitUninterruptibly();// 等待连接断开
 //            session.closeOnFlush();
 
-            }else {
-                if(session!=null){
+            } else {
+                if (session != null) {
 
                     this.session.write(messageBean);
-                }else{
+                } else {
                     MainActivity.handler.sendEmptyMessage(StaticVar.RELOGIN);
                 }
             }
-        }else{
+        } else {
             Looper.prepare();
-            Toast.makeText(this.context,"网络异常",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this.context, "网络异常", Toast.LENGTH_SHORT).show();
             Looper.loop();
         }
 
     }
 
-    public void onResopnse(MessageBean messageBean){
+    public void onResopnse(MessageBean messageBean) {
         this.requestCallBack.Response(messageBean);
-        System.out.println("onResopnse"+shortConnnection);
+        System.out.println("onResopnse" + shortConnnection);
 
-        if(shortConnnection){
-                closeNow(true);
-            shortConnnection=false;
+        if (shortConnnection) {
+            closeNow(true);
+            shortConnnection = false;
         }
     }
 
 
-
-    public void registerBraodCast(){
-        this.context.registerReceiver(connectivityBroadcastReceiver,new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE"));
+    public void registerBraodCast() {
+        this.context.registerReceiver(connectivityBroadcastReceiver, new IntentFilter("android.net.conn.CONNECTIVITY_CHANGE"));
     }
 
     private BroadcastReceiver connectivityBroadcastReceiver = new BroadcastReceiver() {
@@ -378,14 +378,12 @@ public class Client {
 //            }
 
 
-
-
-            System.out.println("网络是否可用"+isNetworkAvailable(var1)+Client.getInstance().isLogin());
-            if(isNetworkAvailable(var1)){
-                if(Client.getInstance().isLogin()&&session==null)
-                MainActivity.handler.sendEmptyMessage(StaticVar.RELOGIN);
-            }else{
-                if(UserFragment.handler!=null)
+            System.out.println("网络是否可用" + isNetworkAvailable(var1) + Client.getInstance().isLogin());
+            if (isNetworkAvailable(var1)) {
+                if (Client.getInstance().isLogin() && session == null)
+                    MainActivity.handler.sendEmptyMessage(StaticVar.RELOGIN);
+            } else {
+                if (UserFragment.handler != null)
                     UserFragment.handler.sendEmptyMessage(StaticVar.OFFLINE);
 
                 isServerIsConnected = false;
@@ -395,22 +393,20 @@ public class Client {
     };
 
 
-
     /**
      * 检测当的网络（WLAN、3G/2G）状态
+     *
      * @param context Context
      * @return true 表示网络可用
      */
-    public  boolean isNetworkAvailable(Context context) {
+    public boolean isNetworkAvailable(Context context) {
         ConnectivityManager connectivity = (ConnectivityManager) context
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
         if (connectivity != null) {
             NetworkInfo info = connectivity.getActiveNetworkInfo();
-            if (info != null && info.isConnected())
-            {
+            if (info != null && info.isConnected()) {
                 // 当前网络是连接的
-                if (info.getState() == NetworkInfo.State.CONNECTED)
-                {
+                if (info.getState() == NetworkInfo.State.CONNECTED) {
                     // 当前所连接的网络可用
                     isNetworkAvailable = true;
                     return true;

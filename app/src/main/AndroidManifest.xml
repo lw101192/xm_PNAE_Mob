@@ -13,22 +13,23 @@
     <uses-permission android:name="android.permission.GET_TASKS" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.SET_DEBUG_APP"></uses-permission>
+    <uses-permission android:name="android.permission.SET_DEBUG_APP" />
+
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
-
 
     <application
         android:name="com.example.xm.util.MyApplication"
         android:allowBackup="true"
+        android:configChanges="screenSize|orientation"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="false"
-        android:configChanges="screenSize|orientation"
         android:theme="@style/AppTheme">
         <activity
             android:name="com.example.xm.activities.Welcome"
             android:theme="@style/Theme.AppCompat.NoActionBar"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -69,11 +70,15 @@
             android:name="com.example.xm.activities.Login_Activity"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
-        <activity android:name="com.example.xm.activities.Runtime_Acyivity"
+        <activity
+            android:name="com.example.xm.activities.Runtime_Acyivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden"></activity>
+            android:windowSoftInputMode="stateHidden" />
 
-
+        <service android:name="com.example.xm.service.ListenerService"/>
+        <service
+            android:name="com.example.xm.service.RemoteKeepLiveService"
+            android:process=":remoteprocess"></service>
     </application>
 
 </manifest>
