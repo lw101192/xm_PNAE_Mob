@@ -146,7 +146,8 @@ public class Client {
             System.out.println("连接服务器失败" + e);
             isServerIsConnected = false;
             callBack.onFaliure(0);
-            UserFragment.handler.sendEmptyMessage(StaticVar.OFFLINE);
+            if(UserFragment.handler!=null)
+                UserFragment.handler.sendEmptyMessage(StaticVar.OFFLINE);
         }
 
 

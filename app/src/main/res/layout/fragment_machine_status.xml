@@ -104,10 +104,10 @@
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:visibility="gone">
-                <com.example.xm.widget.LocationView
+                <com.example.xm.widget.DragZoomLocationView
                     android:id="@+id/img"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     />
             </LinearLayout>
 

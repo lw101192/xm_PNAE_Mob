@@ -99,7 +99,7 @@ public class Util {
     }
 
     //base64字符串转化成图片
-    public static Bitmap GenerateImage(String imgStr)
+    public static Bitmap GenerateImage(String imgStr,int dstWidth,int dsyHeight)
     {   //对字节数组字符串进行Base64解码并生成图片
         if (imgStr == null) //图像数据为空
             return null;
@@ -116,7 +116,7 @@ public class Util {
                 }
             }
             //生成jpeg图片
-            return BitmapFactory.decodeByteArray(b, 0, b.length);
+            return Bitmap.createScaledBitmap(BitmapFactory.decodeByteArray(b,0,b.length),dstWidth,dsyHeight,true);
         }
         catch (Exception e)
         {

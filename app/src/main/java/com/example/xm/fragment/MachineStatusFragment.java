@@ -8,6 +8,7 @@ import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,7 +31,7 @@ import com.example.xm.bean.TwoStatusEntity;
 import com.example.xm.finebiopane.R;
 import xm.mina.Client;
 import com.example.xm.util.Util;
-import com.example.xm.widget.LocationView;
+import com.example.xm.widget.DragZoomLocationView;
 import com.xm.Bean.ContentBean;
 import com.xm.Bean.MessageBean;
 import com.xm.Bean.UserBean;
@@ -77,7 +78,7 @@ public class MachineStatusFragment extends Fragment {
     private LinearLayoutManager lm;
     private Button statusmode;
     private CheckBox quality;
-    private LocationView img;
+    private DragZoomLocationView img;
     private LinearLayout imglayout;
     private LinearLayout qualitylinearlayout;
 
@@ -140,8 +141,10 @@ public class MachineStatusFragment extends Fragment {
                         break;
                     case StaticVar.SYNCHRONOUS_RESULT_IMAGE:
 //                        Runtime_Acyivity.handler.sendEmptyMessage(StaticVar.SYNCHRONOUS_SUCCEED);
+                        DisplayMetrics displayMetrics = new DisplayMetrics();
+                        getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
                         imglayout.setVisibility(View.VISIBLE);
-                        img.setImageBitmap(Util.GenerateImage(msg.obj.toString()));
+                        img.setImageBitmap(Util.GenerateImage(msg.obj.toString(),displayMetrics.widthPixels,displayMetrics.widthPixels*3/5 ));
                         ((FrameLayout) view.findViewById(R.id.layout_status)).getChildAt(0).setVisibility(View.GONE);
                         ((FrameLayout) view.findViewById(R.id.layout_status)).getChildAt(1).setVisibility(View.GONE);
                         ((FrameLayout) view.findViewById(R.id.layout_status)).getChildAt(2).setVisibility(View.GONE);
@@ -497,7 +500,7 @@ public class MachineStatusFragment extends Fragment {
     private void initView(View view) {
         imglayout = (LinearLayout)view.findViewById(R.id.imglayout);
         qualitylinearlayout = (LinearLayout)view.findViewById(R.id.qualitylinearlayout);
-        img = (LocationView)view.findViewById(R.id.img);
+        img = (DragZoomLocationView)view.findViewById(R.id.img);
         statusmode = (Button)view.findViewById(R.id.statusmode);
         if(Util.getConfig(getContext(), "statusmode", "paramsmode").equals("paramsmode")){
             statusmode.setText("数据模式");
