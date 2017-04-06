@@ -294,6 +294,7 @@ public class MachineFragment extends Fragment {
     private void requestMyMachine() {
 
         if(!Client.getInstance().isServerIsConnected()){
+            if(getActivity()!=null)
             Toast.makeText(getActivity(),"网络异常",Toast.LENGTH_SHORT).show();
             return;
         }

@@ -1,5 +1,8 @@
 package com.example.xm.activities;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
@@ -42,6 +45,18 @@ public class Welcome extends AppCompatActivity implements View.OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if(isPendingIntentAvailable()){
+            Intent i= new Intent(getApplicationContext(),MainActivity.class);
+            try {
+                PendingIntent.getActivity(getApplicationContext(), 1,i, PendingIntent.FLAG_NO_CREATE).send();
+            } catch (PendingIntent.CanceledException e) {
+                e.printStackTrace();
+            }
+            return;
+        }
+
+
         setContentView(R.layout.activity_welcome);
         getMobAPPVersionInfo();
         init();
@@ -49,6 +64,13 @@ public class Welcome extends AppCompatActivity implements View.OnClickListener {
         initSplashAction();
 
     }
+
+    public boolean isPendingIntentAvailable() {
+        Intent i= new Intent(getApplicationContext(),MainActivity.class);
+        PendingIntent pi = PendingIntent.getActivity(getApplicationContext(), 1,i, PendingIntent.FLAG_NO_CREATE);
+        return pi != null;
+    }
+
     private void getMobAPPVersionInfo() {
         new Thread(new Runnable() {
             public String infoJson;

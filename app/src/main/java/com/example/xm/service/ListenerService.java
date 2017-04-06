@@ -65,8 +65,22 @@ public class ListenerService extends Service {
 //        //把service设置为前台运行，避免手机系统自动杀掉改服务。
 //        startForeground(startId, builder.build());
 //        startForeground(startId, new Notification());
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                for (int i = 0; i < 100; i++) {
+                    try {
+                        Thread.sleep(1000);
+                        System.out.println("onstartcommand>>>"+i);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }).start();
         return START_STICKY;
     }
+
 
 
     class MyBinder extends IMyAidlInterface.Stub{

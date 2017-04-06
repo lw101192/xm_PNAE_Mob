@@ -17,14 +17,15 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
+import android.os.Vibrator;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.app.NotificationCompat;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -235,22 +236,26 @@ public class MainActivity extends AppCompatActivity implements MachineFragment.O
         tabLayout.getTabAt(1).select();     //默认选中第1个标签
 
 
+        Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+
         mBuilder = new NotificationCompat.Builder(this);
         mBuilder.setContentTitle("测试标题")
                 .setContentText("测试内容")
-                .setContentIntent(PendingIntent.getActivity(this, 1, new Intent(this,MainActivity.class), PendingIntent.FLAG_CANCEL_CURRENT))
+                .setContentIntent(PendingIntent.getActivity(this, 1,intent , PendingIntent.FLAG_CANCEL_CURRENT))
 //		.setNumber(number)//显示数量
 //                .setTicker("测试通知来啦")//通知首次出现在通知栏，带上升动画效果的
 
-                .setPriority(Notification.DEFAULT_ALL)//设置该通知优先级
+                .setPriority(NotificationCompat.DEFAULT_ALL)//设置该通知优先级
 //		.setAutoCancel(true)//设置这个标志当用户单击面板就可以让通知将自动取消
                 .setOngoing(false)//ture，设置他为一个正在进行的通知。他们通常是用来表示一个后台任务,用户积极参与(如播放音乐)或以某种方式正在等待,因此占用设备(如一个文件下载,同步操作,主动网络连接)
-                .setDefaults(Notification.DEFAULT_VIBRATE)//向通知添加声音、闪灯和振动效果的最简单、最一致的方式是使用当前的用户默认设置，使用defaults属性，可以组合：
+//                .setDefaults(NotificationCompat.DEFAULT_VIBRATE)//向通知添加声音、闪灯和振动效果的最简单、最一致的方式是使用当前的用户默认设置，使用defaults属性，可以组合：
                         //Notification.DEFAULT_ALL  Notification.DEFAULT_SOUND 添加声音 // requires VIBRATE permission
                 .setAutoCancel(true)
                 .setSmallIcon(R.mipmap.ic_launcher);
 
         mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+
+        mNotificationManager.cancelAll();
     }
 
     /**
@@ -595,16 +600,7 @@ public class MainActivity extends AppCompatActivity implements MachineFragment.O
                                 try {
                                     switch (jsonObject.get("messagetype").toString()) {
                                         case "notice":
-                                            try {
-                                                mBuilder.setContentTitle("核酸提取仪")
-                                                        .setWhen(System.currentTimeMillis())//通知产生的时间，会在通知信息里显示
-                                                        .setContentText(jsonObject.getString("noticecontent"));
-//						.setNumber(number)//显示数量
-//                                                        .setTicker("核酸提取仪通知来啦");//通知首次出现在通知栏，带上升动画效果的
-                                                mNotificationManager.notify(notificationID++, mBuilder.build());
-                                            } catch (Exception e) {
-
-                                            }
+                                            showNotification(jsonObject.getString("noticecontent"));
 
                                             Map<String, Object> map = new HashMap<>();
                                             try {
@@ -644,6 +640,27 @@ public class MainActivity extends AppCompatActivity implements MachineFragment.O
                 }
             }
         };
+    }
+
+    private void showNotification(String contentText) {
+        try {
+            mBuilder.setDefaults(NotificationCompat.DEFAULT_LIGHTS)
+//                    .setVibrate(new long[]{200,300,200,300,500,300,200,300})
+                    .setContentTitle("核酸提取仪")
+                    .setWhen(System.currentTimeMillis())//通知产生的时间，会在通知信息里显示
+                    .setContentText(contentText)
+//					.setNumber(number)//显示数量
+                    .setTicker("核酸提取仪通知来啦");//通知首次出现在通知栏，带上升动画效果的
+
+            Notification notificationCompat = mBuilder.build();
+            mNotificationManager.notify(notificationID++, notificationCompat);
+
+            Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
+            vibrator.vibrate(new long[]{200,300,200,300,500,300,200,300},-1);
+
+        } catch (Exception e) {
+
+        }
     }
 
 
@@ -1041,7 +1058,7 @@ public class MainActivity extends AppCompatActivity implements MachineFragment.O
         }
         unregisterReceiver(broadcastReceiver);
 
-        System.out.println("onDestroy");
+        System.out.println("mainactivity onDestroy");
         super.onDestroy();
     }
 
