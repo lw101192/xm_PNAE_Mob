@@ -31,6 +31,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import xm.mina.RequestCallBack;
+
 import com.example.xm.bean.StaticVar;
 import com.example.xm.bean.Tab;
 import com.example.xm.fragment.MachineInfoFragment;
@@ -38,6 +39,7 @@ import com.example.xm.fragment.MachineMessageFragment;
 import com.example.xm.fragment.MachineStatusFragment;
 
 import xm.mina.Client;
+
 import com.example.xm.util.DataBaseHelper;
 import com.example.xm.util.Util;
 import com.example.xm.widget.CustomadeDialog;
@@ -55,7 +57,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class Runtime_Acyivity extends AppCompatActivity implements MachineInfoFragment.OnFragmentInteractionListener,MachineMessageFragment.OnFragmentInteractionListener,MachineStatusFragment.OnFragmentInteractionListener {
+public class Runtime_Acyivity extends AppCompatActivity implements MachineInfoFragment.OnFragmentInteractionListener, MachineMessageFragment.OnFragmentInteractionListener, MachineStatusFragment.OnFragmentInteractionListener {
 
     Intent intent;
     public static Handler handler = null;
@@ -180,9 +182,9 @@ public class Runtime_Acyivity extends AppCompatActivity implements MachineInfoFr
                     case StaticVar.SYNCHRONOUS_NULL:
                         start_stop = "启动";
                         if (progressDialog != null)
-                        progressDialog.setMessage("同步成功");
+                            progressDialog.setMessage("同步成功");
                         handler.sendEmptyMessageDelayed(StaticVar.SYNCHRONOUS_SUCCEED, 1000);
-                       MachineStatusFragment.handler.sendEmptyMessage(StaticVar.SYNCHRONOUS_NULL);
+                        MachineStatusFragment.handler.sendEmptyMessage(StaticVar.SYNCHRONOUS_NULL);
                         break;
 //                    case 4:
 //                        mBuilder.setContentTitle("生物反应器")
@@ -195,16 +197,16 @@ public class Runtime_Acyivity extends AppCompatActivity implements MachineInfoFr
 
 
                     case StaticVar.SYNCHRONOUS_RESULT:
-                        if (msg.obj != null){
+                        if (msg.obj != null) {
                             handler.sendEmptyMessage(StaticVar.SYNCHRONOUS_SUCCEED);
-                        Message.obtain(MachineStatusFragment.handler,StaticVar.SYNCHRONOUS_RESULT,msg.obj).sendToTarget();
+                            Message.obtain(MachineStatusFragment.handler, StaticVar.SYNCHRONOUS_RESULT, msg.obj).sendToTarget();
 
 
                             try {
                                 JSONObject object = (JSONObject) msg.obj;
-                                if(object.getString("runningstate").equals("运行")){
+                                if (object.getString("runningstate").equals("运行")) {
                                     start_stop = "停止";
-                                }else{
+                                } else {
                                     start_stop = "启动";
                                 }
 
@@ -217,18 +219,18 @@ public class Runtime_Acyivity extends AppCompatActivity implements MachineInfoFr
                     case StaticVar.SYNCHRONOUS_RESULT_IMAGE:
 //                        System.out.println("msg.obj.length>>>"+msg.obj.toString().length());
 
-                            if(msg.obj.toString().length()>0){
-                                if(progressDialog != null){
-                                    progressDialog.setMessage("同步成功");
-                                    handler.sendEmptyMessageDelayed(StaticVar.SYNCHRONOUS_SUCCEED, 1000);
-                                    Message.obtain(MachineStatusFragment.handler,StaticVar.SYNCHRONOUS_RESULT_IMAGE,msg.obj).sendToTarget();
-                                }
-                            }else{
-                                if(progressDialog != null){
-                                    progressDialog.setMessage("同步失败");
-                                    handler.sendEmptyMessageDelayed(StaticVar.SYNCHRONOUS_FILED, 1000);
-                                }
+                        if (msg.obj.toString().length() > 0) {
+                            if (progressDialog != null) {
+                                progressDialog.setMessage("同步成功");
+                                handler.sendEmptyMessageDelayed(StaticVar.SYNCHRONOUS_SUCCEED, 1000);
+                                Message.obtain(MachineStatusFragment.handler, StaticVar.SYNCHRONOUS_RESULT_IMAGE, msg.obj).sendToTarget();
                             }
+                        } else {
+                            if (progressDialog != null) {
+                                progressDialog.setMessage("同步失败");
+                                handler.sendEmptyMessageDelayed(StaticVar.SYNCHRONOUS_FILED, 1000);
+                            }
+                        }
 
                         break;
                     case StaticVar.SYNCHRONOUS_REQUEST:
@@ -240,7 +242,6 @@ public class Runtime_Acyivity extends AppCompatActivity implements MachineInfoFr
         };
 
     }
-
 
 
     private void initData() {
@@ -263,9 +264,9 @@ public class Runtime_Acyivity extends AppCompatActivity implements MachineInfoFr
         tabs.add(tab);
 
 
-        fragments.add(MachineMessageFragment.newInstance(getIntent().getStringExtra("toID"),getIntent().getStringExtra("nicknname")));
-        fragments.add(MachineStatusFragment.newInstance(getIntent().getStringExtra("toID"),getIntent().getStringExtra("nicknname")));
-        fragments.add(MachineInfoFragment.newInstance(getIntent().getStringExtra("toID"),getIntent().getStringExtra("nicknname")));
+        fragments.add(MachineMessageFragment.newInstance(getIntent().getStringExtra("toID"), getIntent().getStringExtra("nicknname")));
+        fragments.add(MachineStatusFragment.newInstance(getIntent().getStringExtra("toID"), getIntent().getStringExtra("nicknname")));
+        fragments.add(MachineInfoFragment.newInstance(getIntent().getStringExtra("toID"), getIntent().getStringExtra("nicknname")));
 
 
     }
@@ -344,6 +345,7 @@ public class Runtime_Acyivity extends AppCompatActivity implements MachineInfoFr
         super.onBackPressed();
         overridePendingTransition(R.anim.back_in_from_left, R.anim.back_out_to_right);
     }
+
     /**
      * 修改选中的tab
      *
@@ -488,18 +490,18 @@ public class Runtime_Acyivity extends AppCompatActivity implements MachineInfoFr
         sb.append("RE:SynchronousRequest&&");
 //        sendMsg("RE:SynchronousRequest\r\n");
 
-        if(Util.getConfig(this,"statusmode","paramsmode").equals("paramsmode")){
+        if (Util.getConfig(this, "statusmode", "paramsmode").equals("paramsmode")) {
 //            sendMsg("paramsmode\r\n");
             sb.append("paramsmode&&");
-        }else{
+        } else {
 //            sendMsg("imagemode\r\n");
             sb.append("imagemode&&");
         }
 
-        if(Util.getConfig(this,"quality","SD").equals("SD")){
+        if (Util.getConfig(this, "quality", "SD").equals("SD")) {
 //            sendMsg("SD\r\n");
             sb.append("SD\r\n");
-        }else{
+        } else {
 //            sendMsg("HD\r\n");
             sb.append("HD\r\n");
         }
@@ -528,9 +530,9 @@ public class Runtime_Acyivity extends AppCompatActivity implements MachineInfoFr
                     Client.getInstance().sendRquestForResponse(requestBean, false, new RequestCallBack<MessageBean>() {
                         @Override
                         public void Response(MessageBean messageBean) {
-                            if(messageBean.getAckcode()==1){
-                               handler.sendEmptyMessage(4);
-                            }else{
+                            if (messageBean.getAckcode() == 1) {
+                                handler.sendEmptyMessage(4);
+                            } else {
                                 handler.sendEmptyMessage(2);
                             }
                         }
@@ -599,9 +601,9 @@ public class Runtime_Acyivity extends AppCompatActivity implements MachineInfoFr
                 menu.findItem(R.id.clear).setVisible(false);
                 menu.findItem(R.id.synchronize).setVisible(true);
                 menu.findItem(R.id.set).setVisible(true);
-                if(Util.getConfig(Runtime_Acyivity.this,"statusmode","paramsmode").equals("paramsmode")){
+                if (Util.getConfig(Runtime_Acyivity.this, "statusmode", "paramsmode").equals("paramsmode")) {
                     menu.findItem(R.id.start_stop).setVisible(true);
-                }else{
+                } else {
                     menu.findItem(R.id.start_stop).setVisible(false);
                 }
 
@@ -660,10 +662,10 @@ public class Runtime_Acyivity extends AppCompatActivity implements MachineInfoFr
                         Client.getInstance().sendRquestForResponse(messageBean, false, new RequestCallBack<MessageBean>() {
                             @Override
                             public void Response(MessageBean messageBean) {
-                                if(messageBean.getAckcode()==1)
-                                    Message.obtain(Runtime_Acyivity.handler,StaticVar.QUERY_CONFIG_RESULT,"配置成功").sendToTarget();
+                                if (messageBean.getAckcode() == 1)
+                                    Message.obtain(Runtime_Acyivity.handler, StaticVar.QUERY_CONFIG_RESULT, "配置成功").sendToTarget();
                                 else
-                                    Message.obtain(Runtime_Acyivity.handler,StaticVar.QUERY_CONFIG_RESULT,"配置失败").sendToTarget();
+                                    Message.obtain(Runtime_Acyivity.handler, StaticVar.QUERY_CONFIG_RESULT, "配置失败").sendToTarget();
                             }
                         });
 
@@ -697,11 +699,11 @@ public class Runtime_Acyivity extends AppCompatActivity implements MachineInfoFr
                 Client.getInstance().sendRquestForResponse(messageBean, false, new RequestCallBack<MessageBean>() {
                     @Override
                     public void Response(MessageBean messageBean) {
-                        System.out.println("messageBean.getContent().getStringcontent()"+messageBean.getContent().getStringcontent());
-                        switch (messageBean.getContent().getContenttype()){
+                        System.out.println("messageBean.getContent().getStringcontent()" + messageBean.getContent().getStringcontent());
+                        switch (messageBean.getContent().getContenttype()) {
                             case "push":
 
-                                Message.obtain(Runtime_Acyivity.handler,StaticVar.QUERY_CONFIG, messageBean.getContent().getStringcontent()).sendToTarget();
+                                Message.obtain(Runtime_Acyivity.handler, StaticVar.QUERY_CONFIG, messageBean.getContent().getStringcontent()).sendToTarget();
                                 break;
                         }
                     }

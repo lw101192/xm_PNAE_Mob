@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import xm.mina.RequestCallBack;
+
 import com.example.xm.activities.WebView_Activity;
 import com.example.xm.activities.ChangePassword_Activity;
 import com.example.xm.activities.FeedBack_Activity;
@@ -27,6 +28,7 @@ import com.example.xm.activities.MainActivity;
 import com.example.xm.activities.Repair_Activity;
 import com.example.xm.bean.StaticVar;
 import com.example.xm.finebiopane.R;
+
 import xm.mina.Client;
 
 import com.example.xm.widget.CustomadeDialog;
@@ -107,7 +109,6 @@ public class UserFragment extends Fragment implements View.OnClickListener {
         }
 
 
-
     }
 
     @Override
@@ -118,18 +119,18 @@ public class UserFragment extends Fragment implements View.OnClickListener {
         init(view);
         iniHandler();
 
-        if(!Client.getInstance().isNetworkAvailable(getActivity())||Client.getInstance().getSession()==null)
+        if (!Client.getInstance().isNetworkAvailable(getActivity()) || Client.getInstance().getSession() == null)
             UserFragment.handler.sendEmptyMessage(StaticVar.OFFLINE);
         return view;
     }
 
     private void iniHandler() {
-        handler = new Handler(){
+        handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
-                switch (msg.what){
+                switch (msg.what) {
                     case StaticVar.NETWORK_FAULT:
-                        Toast.makeText(getActivity(),"网络异常",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getActivity(), "网络异常", Toast.LENGTH_SHORT).show();
                         break;
                     case StaticVar.OFFLINE:
                         user.setText("离线");
@@ -144,15 +145,15 @@ public class UserFragment extends Fragment implements View.OnClickListener {
 //                        else {
 //                            progressDialog.show();
 //                        }
-                        if(progressDialog!=null&&progressDialog.isShowing()){
-                            int percent = (int)((float)msg.arg1/msg.arg2*100);
-                            progressDialog.setMessage("已下载"+percent+"%");
+                        if (progressDialog != null && progressDialog.isShowing()) {
+                            int percent = (int) ((float) msg.arg1 / msg.arg2 * 100);
+                            progressDialog.setMessage("已下载" + percent + "%");
                         }
 
                         break;
                     case CHECKVERSION:
                         countDownTimer.cancel();
-                        if(loadingDialog!=null&&loadingDialog.isShowing())
+                        if (loadingDialog != null && loadingDialog.isShowing())
                             loadingDialog.dismiss();
 
 
@@ -161,9 +162,9 @@ public class UserFragment extends Fragment implements View.OnClickListener {
                             CustomadeDialog.Builder builder = new CustomadeDialog.Builder(getActivity());
                             int localVersionCode = getVersionCode();
                             int remotVersionCode = jsonObject.getInt("versioncode");
-                            System.out.println("localVersionCode<remotVersionCode"+(localVersionCode<remotVersionCode));
-                            if(localVersionCode<remotVersionCode){
-                                builder.setTitle("发现新版本 "+jsonObject.getString("versionname")).setMessage(jsonObject.getString("info"))
+                            System.out.println("localVersionCode<remotVersionCode" + (localVersionCode < remotVersionCode));
+                            if (localVersionCode < remotVersionCode) {
+                                builder.setTitle("发现新版本 " + jsonObject.getString("versionname")).setMessage(jsonObject.getString("info"))
                                         .setPositiveButton("下载", new DialogInterface.OnClickListener() {
 
                                             @Override
@@ -181,7 +182,7 @@ public class UserFragment extends Fragment implements View.OnClickListener {
                                         // TODO Auto-generated method stub
                                     }
                                 }).create().show();
-                            }else{
+                            } else {
                                 builder.setTitle("提示").setMessage("当前为最新版本，无需更新")
                                         .setNegativeButton("确定", new DialogInterface.OnClickListener() {
 
@@ -196,9 +197,9 @@ public class UserFragment extends Fragment implements View.OnClickListener {
                             e.printStackTrace();
                         }
                         break;
-                    case  StaticVar.COMPLETE_DOWNLOAD:
+                    case StaticVar.COMPLETE_DOWNLOAD:
                         final String filename = msg.obj.toString();
-                        if(progressDialog.isShowing()){
+                        if (progressDialog.isShowing()) {
                             progressDialog.dismiss();
                         }
                         CustomadeDialog.Builder builder = new CustomadeDialog.Builder(getContext());
@@ -227,27 +228,26 @@ public class UserFragment extends Fragment implements View.OnClickListener {
                     case StaticVar.UPDATE:
 
 //                        handler.sendEmptyMessage(StaticVar.UPDATE_DOWNLOAD_PERCENT);
-                        if(progressDialog==null){
+                        if (progressDialog == null) {
                             progressDialog = new ProgressDialog(getContext());
                             progressDialog.setCanceledOnTouchOutside(false);
                             progressDialog.show();
-                        }
-                        else {
+                        } else {
                             progressDialog.show();
                         }
 
-                        MessageBean requestBean = Client.getInstance().getDownloadFileRequestBean("mob/snaeii32","app.apk");
+                        MessageBean requestBean = Client.getInstance().getDownloadFileRequestBean("mob/snaeii32", "app.apk");
                         Client.getInstance().sendRquestForResponse(requestBean, false, new RequestCallBack<MessageBean>() {
                             @Override
                             public void Response(MessageBean messageBean) {
 
 
-                                if(messageBean.getContent().getContenttype()!=null){
-                                    if(messageBean.getContent().getContenttype().equals("filelength"))
-                                        Client.getInstance().fileLength =Long.parseLong(messageBean.getContent().getStringcontent());
+                                if (messageBean.getContent().getContenttype() != null) {
+                                    if (messageBean.getContent().getContenttype().equals("filelength"))
+                                        Client.getInstance().fileLength = Long.parseLong(messageBean.getContent().getStringcontent());
 
-                                    System.out.println("fileLength  "+ Client.getInstance().fileLength);
-                                }else{
+                                    System.out.println("fileLength  " + Client.getInstance().fileLength);
+                                } else {
                                     try {
                                         File filePath = Environment.getExternalStorageDirectory();
                                         String savePath = filePath + "/" + "app.apk";
@@ -256,8 +256,9 @@ public class UserFragment extends Fragment implements View.OnClickListener {
                                         FileChannel fc = out.getChannel();
                                         fc.write(ByteBuffer.wrap(messageBean.getContent().getBytecontent()));
                                         System.out.println("文件接收完成");
-                                        Message.obtain(handler,StaticVar.COMPLETE_DOWNLOAD,"app.apk").sendToTarget();
-                                    }catch (Exception e){}
+                                        Message.obtain(handler, StaticVar.COMPLETE_DOWNLOAD, "app.apk").sendToTarget();
+                                    } catch (Exception e) {
+                                    }
                                 }
 
 
@@ -276,10 +277,11 @@ public class UserFragment extends Fragment implements View.OnClickListener {
 
     /**
      * 安装APK
+     *
      * @param filename APK文件名
      */
     private void installApk(String filename) {
-        String path= Environment.getExternalStorageDirectory()+"/"+filename;
+        String path = Environment.getExternalStorageDirectory() + "/" + filename;
         File apkfile = new File(path);
         if (!apkfile.exists())      //判断文件是否存在，若不存在直接返回
         {
@@ -295,8 +297,8 @@ public class UserFragment extends Fragment implements View.OnClickListener {
 
     private void init(View view) {
         user = (Button) view.findViewById(R.id.user);
-        if(Client.getInstance().isLogin()){
-            if(Client.getInstance().isNetworkAvailable(getContext()))
+        if (Client.getInstance().isLogin()) {
+            if (Client.getInstance().isNetworkAvailable(getContext()))
                 user.setText(MainActivity.USERNAME);
             else
                 user.setText("离线");
@@ -322,6 +324,7 @@ public class UserFragment extends Fragment implements View.OnClickListener {
 
     /**
      * 获取APK VersionName
+     *
      * @return
      */
     private String getVersionName() {
@@ -336,6 +339,7 @@ public class UserFragment extends Fragment implements View.OnClickListener {
 
     /**
      * 获取APK VersionCode
+     *
      * @return
      */
     private int getVersionCode() {
@@ -377,7 +381,7 @@ public class UserFragment extends Fragment implements View.OnClickListener {
 
         switch (view.getId()) {
             case R.id.user:
-                if(user.getText().toString().equals("离线")){
+                if (user.getText().toString().equals("离线")) {
                     MainActivity.handler.sendEmptyMessage(StaticVar.LOGIN);
                 }
                 break;
@@ -420,12 +424,12 @@ public class UserFragment extends Fragment implements View.OnClickListener {
 //                        Toast.makeText(getContext(), "未登录到服务器", Toast.LENGTH_LONG).show();
 //                    }
 
-                if(loadingDialog==null){
-                    loadingDialog = new LoadingDialog(getActivity(),"检查更新...");
+                if (loadingDialog == null) {
+                    loadingDialog = new LoadingDialog(getActivity(), "检查更新...");
                 }
                 loadingDialog.show();
 
-                countDownTimer =new CountDownTimer(10000,1000) {
+                countDownTimer = new CountDownTimer(10000, 1000) {
                     @Override
                     public void onTick(long millisUntilFinished) {
                     }
@@ -436,17 +440,17 @@ public class UserFragment extends Fragment implements View.OnClickListener {
                     }
                 }.start();
 
-                MessageBean requestBean = Client.getInstance().getDownloadFileRequestBean("mob/snaeii32","version.txt");
+                MessageBean requestBean = Client.getInstance().getDownloadFileRequestBean("mob/snaeii32", "version.txt");
                 Client.getInstance().sendRquestForResponse(requestBean, false, new RequestCallBack<MessageBean>() {
                     @Override
                     public void Response(MessageBean messageBean) {
                         try {
 
-                            String infoJson = new String(messageBean.getContent().getBytecontent(),"utf-8");
+                            String infoJson = new String(messageBean.getContent().getBytecontent(), "utf-8");
                             JSONObject jsonObject = new JSONObject(infoJson);
 
 
-                           Message.obtain(handler,CHECKVERSION,jsonObject).sendToTarget();
+                            Message.obtain(handler, CHECKVERSION, jsonObject).sendToTarget();
 
                         } catch (Exception e) {
                             System.out.println(e);
@@ -459,7 +463,7 @@ public class UserFragment extends Fragment implements View.OnClickListener {
 
                 MessageBean messageBean = new MessageBean();
                 messageBean.setAction("logout");
-                UserBean from  = new UserBean();
+                UserBean from = new UserBean();
                 from.setId(Client.getInstance().getUserID());
                 messageBean.setFrom(from);
 

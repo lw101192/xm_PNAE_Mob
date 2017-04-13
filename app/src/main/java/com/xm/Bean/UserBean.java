@@ -10,12 +10,12 @@ public class UserBean implements Serializable {
     private long totallength;
 
 
-
     private String id;
     private String type;
     private String nickname;
     private String originpw;
     private String newpw;
+
     public long getTotallength() {
         return totallength;
     }
@@ -23,6 +23,7 @@ public class UserBean implements Serializable {
     public void setTotallength(long totallength) {
         this.totallength = totallength;
     }
+
     public String getId() {
         return id;
     }

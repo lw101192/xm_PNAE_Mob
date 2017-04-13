@@ -4,10 +4,10 @@ package com.example.xm.bean;
  * Created by liuwei on 2016/10/26.
  */
 public class TempItem {
-    private String number="";
-    private String targetTemp="";
-    private String currentTemp="";
-    private String switchStatus="";
+    private String number = "";
+    private String targetTemp = "";
+    private String currentTemp = "";
+    private String switchStatus = "";
 
     public TempItem() {
     }

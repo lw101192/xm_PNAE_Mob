@@ -11,7 +11,7 @@ public class StaticVar {
     public static final int REQUEST_MACHINE_LIST = 7;       //发送查询设备请求
     public static final String FINISH_ACTIVITY = "FINISH";      //关闭activity标志
     public static final int LOAD_FROM_LOCAL_SQL = 9;        //从本地SQL数据库加载
-//    public static final int SEND_MESSAGE_FAIILED = 10;
+    //    public static final int SEND_MESSAGE_FAIILED = 10;
     public static final int SEND_MESSAGE = 11;
     public static final int REFRESH_HISTROY = 12;       //刷新历史
     public static final int CLEAR_HISTROY = 13;     //清空历史

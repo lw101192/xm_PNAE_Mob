@@ -55,7 +55,7 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
         } else {
             holder.unreadnum.setBackgroundResource(R.drawable.unreadnum_bg);
         }
-        holder.unreadnum.setPadding(0,-5,0,0);
+        holder.unreadnum.setPadding(0, -5, 0, 0);
         holder.id = mValues.get(position).getId();
         holder.itemview.setTag(holder);
 
@@ -108,9 +108,9 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
 
     @Override
     public void onClick(View view) {
-        if(onItemClickListener!=null)
+        if (onItemClickListener != null)
 
-        onItemClickListener.onItemclick(view, view.getTag());
+            onItemClickListener.onItemclick(view, view.getTag());
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

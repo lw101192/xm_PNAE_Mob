@@ -46,7 +46,7 @@ public class ReLoginThread extends Thread {
 
     public void startReconnectionThread() {
         synchronized (reLoginThread) {
-            if (reLoginThread != null && !reLoginThread.isAlive()&&!flag) {
+            if (reLoginThread != null && !reLoginThread.isAlive() && !flag) {
                 flag = true;
                 reLoginThread.start();
             }

@@ -26,8 +26,10 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import xm.mina.ClientCallBack;
+
 import com.example.xm.bean.StaticVar;
 import com.example.xm.finebiopane.R;
+
 import xm.mina.Client;
 
 import com.xm.Bean.MessageBean;
@@ -172,7 +174,6 @@ public class Login_Activity extends Activity implements OnClickListener {
     }
 
 
-
     @Override
     public void onClick(View v) {
         // TODO Auto-generated method stub
@@ -183,10 +184,10 @@ public class Login_Activity extends Activity implements OnClickListener {
 
 
 //                if (userlogin.getText().toString().equals("登录")) {
-                if(Client.getInstance().isNetworkAvailable(getApplicationContext()))
-                login();
+                if (Client.getInstance().isNetworkAvailable(getApplicationContext()))
+                    login();
                 else
-                Toast.makeText(getApplicationContext(),"网络异常",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getApplicationContext(), "网络异常", Toast.LENGTH_SHORT).show();
 //                } else {
 //                    logOut();
 //                }
@@ -233,7 +234,7 @@ public class Login_Activity extends Activity implements OnClickListener {
 //        loginthread.start();
 
 
-        MessageBean messageBean =new MessageBean();
+        MessageBean messageBean = new MessageBean();
         messageBean.setAction("login");
         UserBean from = new UserBean();
         from.setType("mob");
@@ -243,7 +244,7 @@ public class Login_Activity extends Activity implements OnClickListener {
         Client.getInstance().login(messageBean, new ClientCallBack() {
             @Override
             public void onSuccess(int var1, String var2) {
-                System.out.println("onSuccess"+var1);
+                System.out.println("onSuccess" + var1);
                 Client.getInstance().NewUser(uname);
                 loginhandler.sendEmptyMessage(StaticVar.LOGIN_SUCCEED);
 
@@ -260,7 +261,7 @@ public class Login_Activity extends Activity implements OnClickListener {
 
             }
         });
-        if(progressdialog!=null){
+        if (progressdialog != null) {
             progressdialog.setTitle("请稍等");
             progressdialog.setMessage("登录中...");
             progressdialog.show();
@@ -342,8 +343,8 @@ public class Login_Activity extends Activity implements OnClickListener {
 //						}
 //						break;
                     case StaticVar.LOGIN_SUCCEED:
-                        if(progressdialog!=null)
-                        progressdialog.setMessage("登录成功！");
+                        if (progressdialog != null)
+                            progressdialog.setMessage("登录成功！");
                         if (timer2 != null)
                             timer2.cancel();
                         // passwordlayout.setVisibility(View.GONE);
@@ -370,7 +371,7 @@ public class Login_Activity extends Activity implements OnClickListener {
 //                        tel.setEnabled(false);
 //                        user_remember.setEnabled(false);
 //                        user_autologin.setEnabled(false);
-                       Intent intent = new Intent(Login_Activity.this, MainActivity.class);
+                        Intent intent = new Intent(Login_Activity.this, MainActivity.class);
                         intent.setAction("loginsucceed");
                         startActivity(intent);
                         finish();
@@ -385,8 +386,8 @@ public class Login_Activity extends Activity implements OnClickListener {
                             loginhandler.postDelayed(new Runnable() {
                                 @Override
                                 public void run() {
-                                            if (progressdialog != null && progressdialog.isShowing())
-                                                progressdialog.dismiss();
+                                    if (progressdialog != null && progressdialog.isShowing())
+                                        progressdialog.dismiss();
                                 }
                             }, 2000);
                         }
@@ -399,7 +400,7 @@ public class Login_Activity extends Activity implements OnClickListener {
                                 @Override
                                 public void run() {
                                     if (progressdialog != null && progressdialog.isShowing())
-                                            progressdialog.dismiss();
+                                        progressdialog.dismiss();
                                 }
                             }, 2000);
                         }
@@ -417,7 +418,7 @@ public class Login_Activity extends Activity implements OnClickListener {
                                 @Override
                                 public void run() {
                                     if (progressdialog != null && progressdialog.isShowing())
-                                            progressdialog.dismiss();
+                                        progressdialog.dismiss();
                                 }
                             }, 2000);
                         }
@@ -429,7 +430,7 @@ public class Login_Activity extends Activity implements OnClickListener {
                                 @Override
                                 public void run() {
                                     if (progressdialog != null && progressdialog.isShowing())
-                                            progressdialog.dismiss();
+                                        progressdialog.dismiss();
                                 }
                             }, 2000);
                         }
@@ -488,7 +489,7 @@ public class Login_Activity extends Activity implements OnClickListener {
             progressdialog.dismiss();
             progressdialog = null;
         }
-        if(timer2!=null)
+        if (timer2 != null)
             timer2.cancel();
 
         super.onDestroy();

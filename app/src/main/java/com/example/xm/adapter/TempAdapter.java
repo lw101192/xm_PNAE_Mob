@@ -16,13 +16,13 @@ import java.util.zip.Inflater;
 /**
  * Created by liuwei on 2016/10/26.
  */
-public class TempAdapter extends RecyclerView.Adapter<TempAdapter.ViewHolder>{
+public class TempAdapter extends RecyclerView.Adapter<TempAdapter.ViewHolder> {
 
     private List<TempItem> items;
     private Context context;
     private LayoutInflater inflater;
 
-    public TempAdapter(List<TempItem> items,Context context) {
+    public TempAdapter(List<TempItem> items, Context context) {
         this.items = items;
         this.context = context;
     }
@@ -30,7 +30,7 @@ public class TempAdapter extends RecyclerView.Adapter<TempAdapter.ViewHolder>{
     @Override
     public TempAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         inflater = LayoutInflater.from(context);
-        return new ViewHolder(inflater.inflate(R.layout.item_runtime_templistview,null));
+        return new ViewHolder(inflater.inflate(R.layout.item_runtime_templistview, null));
     }
 
     @Override
@@ -56,8 +56,8 @@ public class TempAdapter extends RecyclerView.Adapter<TempAdapter.ViewHolder>{
             super(itemView);
             number = (TextView) itemView.findViewById(R.id.number);
             currentTemp = (TextView) itemView.findViewById(R.id.currenttemp);
-            targetTemp = (TextView)itemView.findViewById(R.id.targettemp);
-            switchStatus = (TextView)itemView.findViewById(R.id.switchstatus);
+            targetTemp = (TextView) itemView.findViewById(R.id.targettemp);
+            switchStatus = (TextView) itemView.findViewById(R.id.switchstatus);
         }
     }
 }

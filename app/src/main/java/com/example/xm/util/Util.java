@@ -19,6 +19,7 @@ import Decoder.BASE64Decoder;
 public class Util {
     /**
      * 保存到本地文件
+     *
      * @param context
      * @param buf
      * @param fileName
@@ -47,6 +48,7 @@ public class Util {
 
     /**
      * 从本地读取
+     *
      * @param context
      * @param fileName
      * @return
@@ -85,7 +87,7 @@ public class Util {
         }
     }
 
-    public static void setConfig(Context context,String key,String value){
+    public static void setConfig(Context context, String key, String value) {
         SharedPreferences preferences = context.getSharedPreferences("config", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString(key, value);
@@ -93,33 +95,27 @@ public class Util {
     }
 
 
-    public static String getConfig(Context context,String key,String defValue){
+    public static String getConfig(Context context, String key, String defValue) {
         SharedPreferences preferences = context.getSharedPreferences("config", Context.MODE_PRIVATE);
         return preferences.getString(key, defValue);
     }
 
     //base64字符串转化成图片
-    public static Bitmap GenerateImage(String imgStr,int dstWidth,int dsyHeight)
-    {   //对字节数组字符串进行Base64解码并生成图片
+    public static Bitmap GenerateImage(String imgStr, int dstWidth, int dsyHeight) {   //对字节数组字符串进行Base64解码并生成图片
         if (imgStr == null) //图像数据为空
             return null;
         BASE64Decoder decoder = new BASE64Decoder();
-        try
-        {
+        try {
             //Base64解码
             byte[] b = decoder.decodeBuffer(imgStr);
-            for(int i=0;i<b.length;++i)
-            {
-                if(b[i]<0)
-                {//调整异常数据
-                    b[i]+=256;
+            for (int i = 0; i < b.length; ++i) {
+                if (b[i] < 0) {//调整异常数据
+                    b[i] += 256;
                 }
             }
             //生成jpeg图片
-            return Bitmap.createScaledBitmap(BitmapFactory.decodeByteArray(b,0,b.length),dstWidth,dsyHeight,true);
-        }
-        catch (Exception e)
-        {
+            return Bitmap.createScaledBitmap(BitmapFactory.decodeByteArray(b, 0, b.length), dstWidth, dsyHeight, true);
+        } catch (Exception e) {
         }
         return null;
     }

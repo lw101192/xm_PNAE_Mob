@@ -22,8 +22,10 @@ import android.widget.Toast;
 
 
 import xm.mina.RequestCallBack;
+
 import com.example.xm.bean.StaticVar;
 import com.example.xm.finebiopane.R;
+
 import xm.mina.Client;
 
 import com.xm.Bean.MessageBean;
@@ -67,7 +69,7 @@ public class Register_Activity extends AppCompatActivity implements OnClickListe
             }
         });
 
-        complete = (TextView)findViewById(R.id.tv_config);
+        complete = (TextView) findViewById(R.id.tv_config);
         complete.setText("完成");
         complete.setOnClickListener(new OnClickListener() {
             @Override
@@ -100,7 +102,7 @@ public class Register_Activity extends AppCompatActivity implements OnClickListe
         registerphone.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if(!hasFocus){
+                if (!hasFocus) {
                     if (TextUtils.isEmpty(registerphone.getText())) {
                         registerphone.setError(null);
                         return;
@@ -216,7 +218,7 @@ public class Register_Activity extends AppCompatActivity implements OnClickListe
                     return;
                 }
             /*
-			 * if (!judgePhoneNums(phoneNums)) { return; }
+             * if (!judgePhoneNums(phoneNums)) { return; }
 			 */// 2. 通过sdk发送短信验证
                 SMSSDK.getVerificationCode("86", phoneNums);
 
@@ -330,9 +332,9 @@ public class Register_Activity extends AppCompatActivity implements OnClickListe
                 Client.getInstance().sendRquestForResponse(messageBean, true, new RequestCallBack<MessageBean>() {
                     @Override
                     public void Response(MessageBean messageBean) {
-                        if(messageBean.getAckcode()==1){
+                        if (messageBean.getAckcode() == 1) {
                             handler2.sendEmptyMessage(3);
-                        }else{
+                        } else {
                             handler2.sendEmptyMessage(4);
                         }
 
@@ -405,13 +407,13 @@ public class Register_Activity extends AppCompatActivity implements OnClickListe
                 UserBean from = new UserBean();
                 from.setId(tel);
                 messageBean.setFrom(from);
-                Client.getInstance().sendRquestForResponse(messageBean,true, new RequestCallBack<MessageBean>() {
+                Client.getInstance().sendRquestForResponse(messageBean, true, new RequestCallBack<MessageBean>() {
                     @Override
                     public void Response(MessageBean messageBean) {
-                        System.out.println("checkResponse"+messageBean.getAckcode());
-                        if(messageBean.getAckcode()==1){
+                        System.out.println("checkResponse" + messageBean.getAckcode());
+                        if (messageBean.getAckcode() == 1) {
                             handler2.sendEmptyMessage(2);
-                        }else{
+                        } else {
                             handler2.sendEmptyMessage(1);
                         }
                     }
@@ -439,7 +441,6 @@ public class Register_Activity extends AppCompatActivity implements OnClickListe
             Register_Activity.this.finish();
         }
     };
-
 
 
 }

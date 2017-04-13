@@ -43,7 +43,7 @@ public class ListenerService extends Service {
     public void onCreate() {
         // TODO Auto-generated method stub
         super.onCreate();
-        if(binder ==null){
+        if (binder == null) {
             binder = new MyBinder();
         }
         conn = new MyServiceConnection();
@@ -69,8 +69,7 @@ public class ListenerService extends Service {
     }
 
 
-
-    class MyBinder extends IMyAidlInterface.Stub{
+    class MyBinder extends IMyAidlInterface.Stub {
 
         @Override
         public String getProcessName() throws RemoteException {

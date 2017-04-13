@@ -122,10 +122,10 @@ public class MachineMessageFragment extends Fragment {
     }
 
     private void initHandler() {
-        handler = new Handler(){
+        handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
-                switch (msg.what){
+                switch (msg.what) {
                     case StaticVar.REFRESH_MESSAGE:
                         getMessageList();
                         messagelv.smoothScrollToPosition(messagelist.size());

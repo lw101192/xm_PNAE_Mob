@@ -12,30 +12,38 @@ public class ContentBean implements Serializable {
     private String contenttype;
     private String stringcontent;
     private byte[] bytecontent;
-	public long getTotallength() {
-		return totallength;
-	}
-	public void setTotallength(long totallength) {
-		this.totallength = totallength;
-	}
-	public String getContenttype() {
-		return contenttype;
-	}
-	public void setContenttype(String contenttype) {
-		this.contenttype = contenttype;
-	}
-	public String getStringcontent() {
-		return stringcontent;
-	}
-	public void setStringcontent(String stringcontent) {
-		this.stringcontent = stringcontent;
-	}
-	public byte[] getBytecontent() {
-		return bytecontent;
-	}
-	public void setBytecontent(byte[] bytecontent) {
-		this.bytecontent = bytecontent;
-	}
 
-   
+    public long getTotallength() {
+        return totallength;
+    }
+
+    public void setTotallength(long totallength) {
+        this.totallength = totallength;
+    }
+
+    public String getContenttype() {
+        return contenttype;
+    }
+
+    public void setContenttype(String contenttype) {
+        this.contenttype = contenttype;
+    }
+
+    public String getStringcontent() {
+        return stringcontent;
+    }
+
+    public void setStringcontent(String stringcontent) {
+        this.stringcontent = stringcontent;
+    }
+
+    public byte[] getBytecontent() {
+        return bytecontent;
+    }
+
+    public void setBytecontent(byte[] bytecontent) {
+        this.bytecontent = bytecontent;
+    }
+
+
 }

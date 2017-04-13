@@ -28,12 +28,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import xm.mina.RequestCallBack;
+
 import com.example.xm.activities.MainActivity;
 import com.example.xm.activities.Runtime_Acyivity;
 import com.example.xm.adapter.MachineAdapter;
 import com.example.xm.bean.StaticVar;
 import com.example.xm.finebiopane.R;
+
 import xm.mina.Client;
+
 import com.example.xm.util.DataBaseHelper;
 import com.example.xm.widget.CustomadeDialog;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -173,6 +176,7 @@ public class MachineFragment extends Fragment {
                         break;
                     case StaticVar.REFRESH_HISTROY_FAILED:
                         Toast.makeText(getContext(), "拉取信息失败", Toast.LENGTH_SHORT).show();
+                        MainActivity.handler.sendEmptyMessage(StaticVar.LOGIN);
                         break;
                 }
             }
@@ -205,7 +209,8 @@ public class MachineFragment extends Fragment {
 
     /**
      * 获取设备信息列表，并更新UI
-     * @param obj   设备信息数据源
+     *
+     * @param obj 设备信息数据源
      */
     private void getdata(Object obj) {
         // TODO Auto-generated method stub
@@ -231,10 +236,11 @@ public class MachineFragment extends Fragment {
 
     /**
      * 将设备信息保存到sqlite
-     * @param data  设备信息
+     *
+     * @param data 设备信息
      */
     private void saveDataToSql(List<Map<String, String>> data) {
-        if(getActivity()==null){
+        if (getActivity() == null) {
             return;
         }
         DataBaseHelper dataBaseHelper = new DataBaseHelper(getActivity(), MainActivity.DB_NAME);
@@ -293,9 +299,9 @@ public class MachineFragment extends Fragment {
      */
     private void requestMyMachine() {
 
-        if(!Client.getInstance().isServerIsConnected()){
-            if(getActivity()!=null)
-            Toast.makeText(getActivity(),"网络异常",Toast.LENGTH_SHORT).show();
+        if (!Client.getInstance().isServerIsConnected()) {
+            if (getActivity() != null)
+                Toast.makeText(getActivity(), "网络异常", Toast.LENGTH_SHORT).show();
             return;
         }
         try {
@@ -309,14 +315,14 @@ public class MachineFragment extends Fragment {
             from.setType("mob");
             from.setId(Client.getInstance().getUserID());
             messageBean.setFrom(from);
-            Client.getInstance().sendRquestForResponse(messageBean,false,new RequestCallBack<MessageBean>(){
+            Client.getInstance().sendRquestForResponse(messageBean, false, new RequestCallBack<MessageBean>() {
 
                 @Override
                 public void Response(MessageBean messageBean) {
                     handler.obtainMessage(StaticVar.REFRESH_MACHINE_LIST, messageBean.getContent().getStringcontent()).sendToTarget();
                 }
             });
-        }catch (Exception e){
+        } catch (Exception e) {
             System.out.println("requestMyMachine失败");
         }
 
@@ -405,7 +411,7 @@ public class MachineFragment extends Fragment {
         int screenHeight = display.getHeight();
         //屏幕宽度
         int screenWidth = display.getWidth();
-        ColumnInfo colInfo = calculateColumnWidthAndCountInRow(screenWidth, 200,2);
+        ColumnInfo colInfo = calculateColumnWidthAndCountInRow(screenWidth, 200, 2);
 //        int rowNum = data.size()%colInfo.countInRow == 0 ? data.size()/colInfo.countInRow:data.size()/colInfo.countInRow+1;
 //        pullToRefreshGridView.setLayoutParams(new ViewGroup.MarginLayoutParams(screenWidth, rowNum * colInfo.width + (rowNum-1)*2));
         pullToRefreshGridView.getRefreshableView().setNumColumns(colInfo.countInRow);
@@ -417,8 +423,9 @@ public class MachineFragment extends Fragment {
 
     /**
      * gridview item长按对话框
-     * @param machineName   设备名称
-     * @param machineID     设备ID
+     *
+     * @param machineName 设备名称
+     * @param machineID   设备ID
      * @return
      */
     CustomadeDialog MyMachineDialog(String machineName, final String machineID) {
@@ -450,7 +457,7 @@ public class MachineFragment extends Fragment {
                                 Client.getInstance().sendRquestForResponse(messageBean, false, new RequestCallBack<MessageBean>() {
                                     @Override
                                     public void Response(MessageBean messageBean) {
-                                        MachineFragment.handler.obtainMessage(StaticVar.REMOVE_MACHINE_FROM_LIST, messageBean.getAckcode()+"").sendToTarget();
+                                        MachineFragment.handler.obtainMessage(StaticVar.REMOVE_MACHINE_FROM_LIST, messageBean.getAckcode() + "").sendToTarget();
                                     }
                                 });
 
@@ -463,7 +470,6 @@ public class MachineFragment extends Fragment {
 
                             }
                         }).create().show();
-
 
 
 //                        String msg[] = new String[2];
@@ -490,9 +496,9 @@ public class MachineFragment extends Fragment {
                                 Client.getInstance().sendRquestForResponse(messageBean, false, new RequestCallBack<MessageBean>() {
                                     @Override
                                     public void Response(MessageBean messageBean) {
-                                        if(messageBean.getAckcode()==1){
+                                        if (messageBean.getAckcode() == 1) {
                                             handler.obtainMessage(StaticVar.REQUEST_MACHINE_LIST).sendToTarget();
-                                        }else{
+                                        } else {
                                             Toast.makeText(getContext(), "重命名失败", Toast.LENGTH_SHORT).show();
                                         }
 
@@ -539,37 +545,39 @@ public class MachineFragment extends Fragment {
     }
 
     //存放计算后的单元格相关信息
-    class ColumnInfo{
+    class ColumnInfo {
         //单元格宽度
         public int width = 0;
         //每行所能容纳的单元格数量
         public int countInRow = 0;
     }
+
     /**
      * 根据手机屏幕宽度，计算gridview每个单元格的宽度
+     *
      * @param screenWidth 屏幕宽度
-     * @param width 单元格预设宽度
-     * @param padding 单元格间距
+     * @param width       单元格预设宽度
+     * @param padding     单元格间距
      * @return
      */
-    private ColumnInfo calculateColumnWidthAndCountInRow(int screenWidth,int width,int padding){
+    private ColumnInfo calculateColumnWidthAndCountInRow(int screenWidth, int width, int padding) {
         ColumnInfo colInfo = new ColumnInfo();
         int colCount = 0;
         //判断屏幕是否刚好能容纳下整数个单元格，若不能，则将多出的宽度保存到space中
         int space = screenWidth % width;
-        if( space == 0 ){ //正好容纳下
+        if (space == 0) { //正好容纳下
             colCount = screenWidth / width;
-        }else if( space >= ( width / 2 ) ){ //多出的宽度大于单元格宽度的一半时，则去除最后一个单元格，将其所占的宽度平分并增加到其他每个单元格中
+        } else if (space >= (width / 2)) { //多出的宽度大于单元格宽度的一半时，则去除最后一个单元格，将其所占的宽度平分并增加到其他每个单元格中
             colCount = screenWidth / width;
             space = width - space;
             width = width + space / colCount;
-        }else{  //多出的宽度小于单元格宽度的一半时，则将多出的宽度平分，并让每个单元格减去平分后的宽度
+        } else {  //多出的宽度小于单元格宽度的一半时，则将多出的宽度平分，并让每个单元格减去平分后的宽度
             colCount = screenWidth / width + 1;
             width = width - space / colCount;
         }
         colInfo.countInRow = colCount;
         //计算出每行的间距总宽度，并根据单元格的数量重新调整单元格的宽度
-        colInfo.width = width - (( colCount + 1 ) * padding ) / colCount;
+        colInfo.width = width - ((colCount + 1) * padding) / colCount;
         return colInfo;
     }
 

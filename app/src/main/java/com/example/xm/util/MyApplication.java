@@ -17,7 +17,7 @@ public class MyApplication extends Application {
         init(this.getApplicationContext());
     }
 
-    void init(Context context){
+    void init(Context context) {
         Client.getInstance().init(context);
     }
 }

@@ -19,8 +19,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import xm.mina.RequestCallBack;
+
 import com.example.xm.bean.StaticVar;
 import com.example.xm.finebiopane.R;
+
 import xm.mina.Client;
 
 import com.xm.Bean.ContentBean;
@@ -37,7 +39,7 @@ public class FeedBack_Activity extends AppCompatActivity {
     private Toolbar toolbar;
     private TextView title;
     private TextView complete;
-    private boolean shortConnnection=false;
+    private boolean shortConnnection = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,10 +82,10 @@ public class FeedBack_Activity extends AppCompatActivity {
         feedback = (EditText) findViewById(R.id.feedback);
         submit = (Button) findViewById(R.id.submit);
 
-        if(getIntent().getAction()!=null){
-            if(getIntent().getAction().toString().equals("fromloginactivity")){
+        if (getIntent().getAction() != null) {
+            if (getIntent().getAction().toString().equals("fromloginactivity")) {
                 shortConnnection = true;
-            }else if(getIntent().getAction().toString().equals("fromUserFragment")){
+            } else if (getIntent().getAction().toString().equals("fromUserFragment")) {
                 shortConnnection = false;
             }
         }
@@ -97,7 +99,7 @@ public class FeedBack_Activity extends AppCompatActivity {
                 if (!TextUtils.isEmpty(phoneno.getText())) {
                     phonenostr = phoneno.getText().toString();
                 } else {
-                    if(Client.getInstance().getUserID()!=null)
+                    if (Client.getInstance().getUserID() != null)
                         phonenostr = Client.getInstance().getUserID();
                 }
                 if (TextUtils.isEmpty(feedback.getText()))
@@ -134,9 +136,9 @@ public class FeedBack_Activity extends AppCompatActivity {
             Client.getInstance().sendRquestForResponse(messageBean, shortConnnection, new RequestCallBack<MessageBean>() {
                 @Override
                 public void Response(MessageBean messageBean) {
-                    if (messageBean.getAckcode()==1)
+                    if (messageBean.getAckcode() == 1)
                         FeedBack_Activity.handler.obtainMessage(0, "1").sendToTarget();
-                    if (messageBean.getAckcode()==0)
+                    if (messageBean.getAckcode() == 0)
                         FeedBack_Activity.handler.obtainMessage(0, "0").sendToTarget();
                 }
             });
@@ -214,7 +216,7 @@ public class FeedBack_Activity extends AppCompatActivity {
             }
         });
 
-        complete = (TextView)findViewById(R.id.tv_config);
+        complete = (TextView) findViewById(R.id.tv_config);
         complete.setText("完成");
         complete.setOnClickListener(new OnClickListener() {
             @Override

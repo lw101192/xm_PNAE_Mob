@@ -21,8 +21,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import xm.mina.RequestCallBack;
+
 import com.example.xm.bean.StaticVar;
 import com.example.xm.finebiopane.R;
+
 import xm.mina.Client;
 
 import com.xm.Bean.MessageBean;
@@ -45,7 +47,7 @@ public class ChangePassword_Activity extends AppCompatActivity implements OnClic
     private Toolbar toolbar;
     private TextView title;
     private TextView complete;
-    private boolean shortConnnection=false;
+    private boolean shortConnnection = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,7 +83,7 @@ public class ChangePassword_Activity extends AppCompatActivity implements OnClic
         registerphone.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if(!hasFocus){
+                if (!hasFocus) {
                     if (TextUtils.isEmpty(registerphone.getText())) {
                         registerphone.setError(null);
                         return;
@@ -141,10 +143,10 @@ public class ChangePassword_Activity extends AppCompatActivity implements OnClic
                     try {
                         MessageBean messageBean = new MessageBean();
                         messageBean.setAction("logout");
-                        UserBean from  = new UserBean();
+                        UserBean from = new UserBean();
                         from.setId(Client.getInstance().getUserID());
                         messageBean.setFrom(from);
-                        Client.getInstance().sendRquest(shortConnnection,messageBean);
+                        Client.getInstance().sendRquest(shortConnnection, messageBean);
                     } catch (Exception e) {
                         // TODO: handle exception
                     }
@@ -219,7 +221,7 @@ public class ChangePassword_Activity extends AppCompatActivity implements OnClic
                     return;
                 }
             /*
-			 * if (!judgePhoneNums(phoneNums)) { return; }
+             * if (!judgePhoneNums(phoneNums)) { return; }
 			 */// 2. 通过sdk发送短信验证
                 SMSSDK.getVerificationCode("86", phoneNums);
 
@@ -246,7 +248,7 @@ public class ChangePassword_Activity extends AppCompatActivity implements OnClic
                 break;
 
             case R.id.Submit_btn:
-                if(TextUtils.isEmpty(newpasssword.getText())){
+                if (TextUtils.isEmpty(newpasssword.getText())) {
                     Toast.makeText(getApplicationContext(), "密码不能为空",
                             Toast.LENGTH_SHORT).show();
                     break;
@@ -317,7 +319,7 @@ public class ChangePassword_Activity extends AppCompatActivity implements OnClic
 
     @Override
     protected void onDestroy() {
-		SMSSDK.unregisterAllEventHandler();
+        SMSSDK.unregisterAllEventHandler();
         unregisterReceiver(broadcastReceiver);
         super.onDestroy();
     }
@@ -359,9 +361,9 @@ public class ChangePassword_Activity extends AppCompatActivity implements OnClic
                 Client.getInstance().sendRquestForResponse(messageBean, shortConnnection, new RequestCallBack<MessageBean>() {
                     @Override
                     public void Response(MessageBean messageBean) {
-                        if(messageBean.getAckcode()==1){
+                        if (messageBean.getAckcode() == 1) {
                             handler2.sendEmptyMessage(3);
-                        }else{
+                        } else {
                             handler2.sendEmptyMessage(4);
                         }
                     }
@@ -410,7 +412,7 @@ public class ChangePassword_Activity extends AppCompatActivity implements OnClic
             }
         });
 
-        complete = (TextView)findViewById(R.id.tv_config);
+        complete = (TextView) findViewById(R.id.tv_config);
         complete.setText("完成");
 
         complete.setOnClickListener(this);
@@ -445,9 +447,9 @@ public class ChangePassword_Activity extends AppCompatActivity implements OnClic
                 Client.getInstance().sendRquestForResponse(messageBean, shortConnnection, new RequestCallBack<MessageBean>() {
                     @Override
                     public void Response(MessageBean messageBean) {
-                        if(messageBean.getAckcode()==1){
+                        if (messageBean.getAckcode() == 1) {
                             handler2.sendEmptyMessage(2);
-                        }else{
+                        } else {
                             handler2.sendEmptyMessage(1);
                         }
                     }

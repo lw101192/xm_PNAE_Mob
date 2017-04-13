@@ -87,11 +87,11 @@ public class MachineInfoFragment extends Fragment {
         return view;
     }
 
-    private void initHandler(){
-        handler = new Handler(){
+    private void initHandler() {
+        handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
-                switch (msg.what){
+                switch (msg.what) {
                     case StaticVar.SYNCHRONOUS_SUCCEED:
                         getLastSynchronizeTime();
                         break;
@@ -102,11 +102,11 @@ public class MachineInfoFragment extends Fragment {
     }
 
     private void initView(View view) {
-        nickName = (TextView)view.findViewById(R.id.nickname);
-        id = (TextView)view.findViewById(R.id.id);
-        createTime = (TextView)view.findViewById(R.id.createtime);
-        lastSynchronizeTime = (TextView)view.findViewById(R.id.lastsynchronizetime);
-        online = (TextView)view.findViewById(R.id.online);
+        nickName = (TextView) view.findViewById(R.id.nickname);
+        id = (TextView) view.findViewById(R.id.id);
+        createTime = (TextView) view.findViewById(R.id.createtime);
+        lastSynchronizeTime = (TextView) view.findViewById(R.id.lastsynchronizetime);
+        online = (TextView) view.findViewById(R.id.online);
 
         nickName.setText(mParam2);
         id.setText(mParam1);
@@ -154,7 +154,7 @@ public class MachineInfoFragment extends Fragment {
      * 获取最近一次同步时间
      */
     private void getLastSynchronizeTime() {
-        if(getActivity()==null){
+        if (getActivity() == null) {
             return;
         }
         DataBaseHelper dataBaseHelper = new DataBaseHelper(getActivity(), MainActivity.DB_NAME);

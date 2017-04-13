@@ -21,6 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import xm.mina.RequestCallBack;
+
 import com.example.xm.activities.Runtime_Acyivity;
 import com.example.xm.adapter.StatusExpandAdapter;
 import com.example.xm.adapter.TempAdapter;
@@ -29,7 +30,9 @@ import com.example.xm.bean.StaticVar;
 import com.example.xm.bean.TempItem;
 import com.example.xm.bean.TwoStatusEntity;
 import com.example.xm.finebiopane.R;
+
 import xm.mina.Client;
+
 import com.example.xm.util.Util;
 import com.example.xm.widget.DragZoomLocationView;
 import com.xm.Bean.ContentBean;
@@ -127,9 +130,9 @@ public class MachineStatusFragment extends Fragment {
         handler = new Handler() {
             @Override
             public void handleMessage(Message msg) {
-                switch (msg.what){
+                switch (msg.what) {
                     case StaticVar.SEND_MESSAGE:
-                        sendMsg("TR:"+msg.obj.toString()+"&&"+Util.getConfig(getActivity(),"quality","SD"));
+                        sendMsg("TR:" + msg.obj.toString() + "&&" + Util.getConfig(getActivity(), "quality", "SD"));
                         break;
                     case StaticVar.SYNCHRONOUS_NULL:
                         defaultview.setText("设备休息中，啥事也没干！");
@@ -142,9 +145,11 @@ public class MachineStatusFragment extends Fragment {
                     case StaticVar.SYNCHRONOUS_RESULT_IMAGE:
 //                        Runtime_Acyivity.handler.sendEmptyMessage(StaticVar.SYNCHRONOUS_SUCCEED);
                         DisplayMetrics displayMetrics = new DisplayMetrics();
+                        if (getActivity() == null)
+                            break;
                         getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
                         imglayout.setVisibility(View.VISIBLE);
-                        img.setImageBitmap(Util.GenerateImage(msg.obj.toString(),displayMetrics.widthPixels,displayMetrics.widthPixels*3/5 ));
+                        img.setImageBitmap(Util.GenerateImage(msg.obj.toString(), displayMetrics.widthPixels, displayMetrics.widthPixels * 3 / 5));
                         ((FrameLayout) view.findViewById(R.id.layout_status)).getChildAt(0).setVisibility(View.GONE);
                         ((FrameLayout) view.findViewById(R.id.layout_status)).getChildAt(1).setVisibility(View.GONE);
                         ((FrameLayout) view.findViewById(R.id.layout_status)).getChildAt(2).setVisibility(View.GONE);
@@ -153,7 +158,7 @@ public class MachineStatusFragment extends Fragment {
                         img.setImageResource(0);
                         imglayout.setVisibility(View.GONE);
 
-                        System.out.println("StaticVar.SYNCHRONOUS_RESULT"+msg.obj.toString());
+                        System.out.println("StaticVar.SYNCHRONOUS_RESULT" + msg.obj.toString());
                         JSONObject jsonObject = (JSONObject) msg.obj;
                         try {
                             switch (jsonObject.get("paramstype").toString()) {
@@ -186,24 +191,25 @@ public class MachineStatusFragment extends Fragment {
                                     }
                                     break;
                                 case "config":
-                                    if(jsonObject.getString("device").equals("下载")){
+                                    if (jsonObject.getString("device").equals("下载")) {
                                         tv_config.setText("下载中。。。");
-                                    }else{
-                                    ((FrameLayout) view.findViewById(R.id.layout_status)).getChildAt(0).setVisibility(View.INVISIBLE);
-                                    ((FrameLayout) view.findViewById(R.id.layout_status)).getChildAt(1).setVisibility(View.INVISIBLE);
-                                    ((FrameLayout) view.findViewById(R.id.layout_status)).getChildAt(2).setVisibility(View.VISIBLE);
-                                    StringBuffer sb = new StringBuffer();
-                                    sb.append("设备名称：" + jsonObject.getString("device") + "\n");
-                                    try {
-                                        sb.append("共" + Integer.parseInt(jsonObject.getString("totalsteps")) / 60 + "分钟，剩余" + Integer.parseInt(jsonObject.getString("currentstep")) / 60 + "分" + Integer.parseInt(jsonObject.getString("currentstep")) % 60 + "秒" + "\n");
-                                        start_stop = jsonObject.getString("runningstate").equals("运行") ? "停止" : "启动";
-                                        sb.append("运行状态：" + jsonObject.getString("runningstate") + "\n");
-                                    } catch (Exception e) {
-                                        start_stop = "启动";
+                                    } else {
+                                        ((FrameLayout) view.findViewById(R.id.layout_status)).getChildAt(0).setVisibility(View.INVISIBLE);
+                                        ((FrameLayout) view.findViewById(R.id.layout_status)).getChildAt(1).setVisibility(View.INVISIBLE);
+                                        ((FrameLayout) view.findViewById(R.id.layout_status)).getChildAt(2).setVisibility(View.VISIBLE);
+                                        StringBuffer sb = new StringBuffer();
+                                        sb.append("设备名称：" + jsonObject.getString("device") + "\n");
+                                        try {
+                                            sb.append("共" + Integer.parseInt(jsonObject.getString("totalsteps")) / 60 + "分钟，剩余" + Integer.parseInt(jsonObject.getString("currentstep")) / 60 + "分" + Integer.parseInt(jsonObject.getString("currentstep")) % 60 + "秒" + "\n");
+                                            start_stop = jsonObject.getString("runningstate").equals("运行") ? "停止" : "启动";
+                                            sb.append("运行状态：" + jsonObject.getString("runningstate") + "\n");
+                                        } catch (Exception e) {
+                                            start_stop = "启动";
+                                        }
+
+
+                                        tv_config.setText(sb.toString());
                                     }
-
-
-                                    tv_config.setText(sb.toString());}
 //                                    getData(jsonObject, "nonstandard");
 //                                    statusAdapter = new StatusExpandAdapter(Runtime_Acyivity.this, oneList);
 //                                    expandableListView.setAdapter(statusAdapter);
@@ -282,9 +288,10 @@ public class MachineStatusFragment extends Fragment {
                             try {
                                 sb.append("裂解1温度:" + temperarray.get(0) + " ℃\n");
                                 sb.append("裂解2温度:" + temperarray.get(2) + " ℃\n");
-                                if(res.getString("machinetype").equals("pnae32")){
-                                sb.append("裂解3温度:" + temperarray.get(4) + " ℃\n");
-                                sb.append("裂解4温度:" + temperarray.get(6) + " ℃\n");}
+                                if (res.getString("machinetype").equals("pnae32")) {
+                                    sb.append("裂解3温度:" + temperarray.get(4) + " ℃\n");
+                                    sb.append("裂解4温度:" + temperarray.get(6) + " ℃\n");
+                                }
                             } catch (Exception e) {
                             }
                         try {
@@ -303,9 +310,10 @@ public class MachineStatusFragment extends Fragment {
                             try {
                                 sb.append("洗脱温度:" + temperarray.get(1) + " ℃\n");
                                 sb.append("洗脱温度:" + temperarray.get(3) + " ℃\n");
-                                if(res.getString("machinetype").equals("pnae32")){
-                                sb.append("洗脱温度:" + temperarray.get(5) + " ℃\n");
-                                sb.append("洗脱温度:" + temperarray.get(7) + " ℃\n");}
+                                if (res.getString("machinetype").equals("pnae32")) {
+                                    sb.append("洗脱温度:" + temperarray.get(5) + " ℃\n");
+                                    sb.append("洗脱温度:" + temperarray.get(7) + " ℃\n");
+                                }
                             } catch (Exception e) {
                             }
 
@@ -408,7 +416,7 @@ public class MachineStatusFragment extends Fragment {
             int length = temperarray.length() / 2;
             for (int i = 0; i < length; i++) {
                 tempItem = new TempItem();
-                tempItem.setNumber(i+1 + "");
+                tempItem.setNumber(i + 1 + "");
                 tempItem.setTargetTemp(temperarray.get(i).toString());
                 if (Boolean.parseBoolean(temperarray.get(i + length).toString()))
                     tempItem.setSwitchStatus("开");
@@ -423,7 +431,7 @@ public class MachineStatusFragment extends Fragment {
 
         for (int i = 0; i < item_TempList.size(); i++) {
             try {
-                item_TempList.get(i).setCurrentTemp(res.getString("工位"+(i+1)));
+                item_TempList.get(i).setCurrentTemp(res.getString("工位" + (i + 1)));
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -498,25 +506,25 @@ public class MachineStatusFragment extends Fragment {
     }
 
     private void initView(View view) {
-        imglayout = (LinearLayout)view.findViewById(R.id.imglayout);
-        qualitylinearlayout = (LinearLayout)view.findViewById(R.id.qualitylinearlayout);
-        img = (DragZoomLocationView)view.findViewById(R.id.img);
-        statusmode = (Button)view.findViewById(R.id.statusmode);
-        if(Util.getConfig(getContext(), "statusmode", "paramsmode").equals("paramsmode")){
+        imglayout = (LinearLayout) view.findViewById(R.id.imglayout);
+        qualitylinearlayout = (LinearLayout) view.findViewById(R.id.qualitylinearlayout);
+        img = (DragZoomLocationView) view.findViewById(R.id.img);
+        statusmode = (Button) view.findViewById(R.id.statusmode);
+        if (Util.getConfig(getContext(), "statusmode", "paramsmode").equals("paramsmode")) {
             statusmode.setText("数据模式");
             qualitylinearlayout.setVisibility(View.GONE);
-        }else{
+        } else {
             statusmode.setText("图像模式");
             qualitylinearlayout.setVisibility(View.VISIBLE);
         }
         statusmode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(statusmode.getText().toString().equals("数据模式")){
+                if (statusmode.getText().toString().equals("数据模式")) {
                     statusmode.setText("图像模式");
                     qualitylinearlayout.setVisibility(View.VISIBLE);
                     Util.setConfig(getContext(), "statusmode", "imagesmode");
-                }else{
+                } else {
                     statusmode.setText("数据模式");
                     qualitylinearlayout.setVisibility(View.GONE);
                     Util.setConfig(getContext(), "statusmode", "paramsmode");
@@ -525,14 +533,14 @@ public class MachineStatusFragment extends Fragment {
                 Runtime_Acyivity.handler.sendEmptyMessage(StaticVar.SYNCHRONOUS_REQUEST);
             }
         });
-        quality = (CheckBox)view.findViewById(R.id.quality);
+        quality = (CheckBox) view.findViewById(R.id.quality);
         quality.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked)
-                    Util.setConfig(getContext(),"quality","HD");
+                if (isChecked)
+                    Util.setConfig(getContext(), "quality", "HD");
                 else
-                    Util.setConfig(getContext(),"quality","SD");
+                    Util.setConfig(getContext(), "quality", "SD");
 
 
             }
@@ -543,9 +551,9 @@ public class MachineStatusFragment extends Fragment {
                 Runtime_Acyivity.handler.sendEmptyMessage(StaticVar.SYNCHRONOUS_REQUEST);
             }
         });
-        if(Util.getConfig(getContext(), "quality", "SD").equals("SD")){
+        if (Util.getConfig(getContext(), "quality", "SD").equals("SD")) {
             quality.setChecked(false);
-        }else{
+        } else {
             quality.setChecked(true);
         }
 
@@ -599,8 +607,6 @@ public class MachineStatusFragment extends Fragment {
     }
 
 
-
-
     public void sendMsg(final String content) {
         new Thread(new Runnable() {
 
@@ -635,9 +641,9 @@ public class MachineStatusFragment extends Fragment {
                     Client.getInstance().sendRquestForResponse(messageBean, false, new RequestCallBack<MessageBean>() {
                         @Override
                         public void Response(MessageBean messageBean) {
-                            if(messageBean.getAckcode()==1){
+                            if (messageBean.getAckcode() == 1) {
                                 handler.sendEmptyMessage(4);
-                            }else{
+                            } else {
                                 handler.sendEmptyMessage(2);
                             }
                         }

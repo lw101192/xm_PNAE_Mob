@@ -35,6 +35,7 @@ public class MessageBean implements Serializable {
     public void setTotallength(long totallength) {
         this.totallength = totallength;
     }
+
     public String getAction() {
         return action;
     }

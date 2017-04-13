@@ -14,8 +14,11 @@ import android.widget.Button;
 import android.widget.ImageView;
 
 import xm.mina.RequestCallBack;
+
 import com.example.xm.finebiopane.R;
+
 import xm.mina.Client;
+
 import com.example.xm.util.Util;
 import com.xm.Bean.MessageBean;
 
@@ -46,10 +49,10 @@ public class Welcome extends AppCompatActivity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if(isPendingIntentAvailable()){
-            Intent i= new Intent(getApplicationContext(),MainActivity.class);
+        if (isPendingIntentAvailable()) {
+            Intent i = new Intent(getApplicationContext(), MainActivity.class);
             try {
-                PendingIntent.getActivity(getApplicationContext(), 1,i, PendingIntent.FLAG_NO_CREATE).send();
+                PendingIntent.getActivity(getApplicationContext(), 1, i, PendingIntent.FLAG_NO_CREATE).send();
             } catch (PendingIntent.CanceledException e) {
                 e.printStackTrace();
             }
@@ -66,8 +69,8 @@ public class Welcome extends AppCompatActivity implements View.OnClickListener {
     }
 
     public boolean isPendingIntentAvailable() {
-        Intent i= new Intent(getApplicationContext(),MainActivity.class);
-        PendingIntent pi = PendingIntent.getActivity(getApplicationContext(), 1,i, PendingIntent.FLAG_NO_CREATE);
+        Intent i = new Intent(getApplicationContext(), MainActivity.class);
+        PendingIntent pi = PendingIntent.getActivity(getApplicationContext(), 1, i, PendingIntent.FLAG_NO_CREATE);
         return pi != null;
     }
 
@@ -81,12 +84,12 @@ public class Welcome extends AppCompatActivity implements View.OnClickListener {
 
 
                 try {
-                    MessageBean requestBean = Client.getInstance().getDownloadFileRequestBean("mob/snaeii32","version.txt");
+                    MessageBean requestBean = Client.getInstance().getDownloadFileRequestBean("mob/snaeii32", "version.txt");
                     Client.getInstance().sendRquestForResponse(requestBean, true, new RequestCallBack<MessageBean>() {
                         @Override
                         public void Response(MessageBean messageBean) {
                             try {
-                                infoJson = new String(messageBean.getContent().getBytecontent(),"utf-8");
+                                infoJson = new String(messageBean.getContent().getBytecontent(), "utf-8");
                                 try {
                                     JSONObject jsonObject = new JSONObject(infoJson);
                                     link = jsonObject.getString("welcomelogolink");     //得到欢迎界面图片链接
@@ -98,7 +101,7 @@ public class Welcome extends AppCompatActivity implements View.OnClickListener {
                                 try {
                                     JSONObject jsonObject = new JSONObject(Util.ReadFromFile(Welcome.this, "version.txt"));       //获取本地MobAPPVersionInfo.txt
                                     originallink = jsonObject.getString("welcomelogolink");
-                                    System.out.println("originallink>>>"+originallink);
+                                    System.out.println("originallink>>>" + originallink);
                                 } catch (Exception e) {
                                 }
                                 if (infoJson != null)

@@ -36,7 +36,7 @@ import java.util.List;
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
  */
-public class HistroyFragment extends Fragment  {
+public class HistroyFragment extends Fragment {
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
@@ -83,7 +83,7 @@ public class HistroyFragment extends Fragment  {
      */
     private void getdata() {
         items.clear();
-        if(getContext()==null)
+        if (getContext() == null)
             return;
         DataBaseHelper dataBaseHelper = new DataBaseHelper(getContext(), MainActivity.DB_NAME);
         SQLiteDatabase sqliteDatabase = dataBaseHelper.getReadableDatabase();
@@ -119,15 +119,16 @@ public class HistroyFragment extends Fragment  {
 
     /**
      * 获取设备名称
-     * @param id    设备ID
+     *
+     * @param id 设备ID
      * @return
      */
     private String getNickName(String id) {
-        String nickName=null;
+        String nickName = null;
         DataBaseHelper dataBaseHelper = new DataBaseHelper(getContext(), MainActivity.DB_NAME);
         SQLiteDatabase sqliteDatabase = dataBaseHelper.getReadableDatabase();
         Cursor cursor = sqliteDatabase.rawQuery("select nickname from mymachine where id = ?", new String[]{id});
-        if(cursor.moveToNext()){
+        if (cursor.moveToNext()) {
             nickName = cursor.getString(0);
         }
         cursor.close();
@@ -138,6 +139,7 @@ public class HistroyFragment extends Fragment  {
 
     /**
      * 获取未读消息数目
+     *
      * @param id 设备ID
      * @return
      */
@@ -175,7 +177,7 @@ public class HistroyFragment extends Fragment  {
                     intent.setClass(getContext(), Runtime_Acyivity.class);
                     intent.putExtra("toID", ((MyItemRecyclerViewAdapter.ViewHolder) data).id);
                     intent.putExtra("nicknname", ((MyItemRecyclerViewAdapter.ViewHolder) data).nickname.getText().toString());
-                    intent.putExtra("from","histroy");
+                    intent.putExtra("from", "histroy");
                     startActivity(intent);
                     getActivity().overridePendingTransition(R.anim.in_from_right,
                             R.anim.out_to_left);
@@ -195,6 +197,7 @@ public class HistroyFragment extends Fragment  {
 
     /**
      * 移除未读消息
+     *
      * @param id 设备ID
      */
     private void clearUnReadNum(String id) {
@@ -225,8 +228,8 @@ public class HistroyFragment extends Fragment  {
                         sqLiteDatabase.close();
                         break;
                     case StaticVar.CLEAR_UNREAD:
-                        for(int i=0;i<items.size();i++)
-                        clearUnReadNum(items.get(i).getId());
+                        for (int i = 0; i < items.size(); i++)
+                            clearUnReadNum(items.get(i).getId());
 
                         adapter.notifyDataSetChanged();
                         break;
@@ -237,11 +240,12 @@ public class HistroyFragment extends Fragment  {
 
     /**
      * 获取设备ID列表
+     *
      * @return
      */
     private List<String> getids() {
         ids.clear();
-        if(getActivity()==null)
+        if (getActivity() == null)
             return null;
         DataBaseHelper dataBaseHelper = new DataBaseHelper(getContext(), MainActivity.DB_NAME);
         SQLiteDatabase sqliteDatabase = dataBaseHelper.getReadableDatabase();

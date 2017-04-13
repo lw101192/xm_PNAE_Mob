@@ -223,7 +223,7 @@ public class CustomadeDialog extends Dialog {
                 ((LinearLayout) layout.findViewById(R.id.content))
                         .addView(contentView, new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
 
-            }else if(contentView ==null){
+            } else if (contentView == null) {
                 ((LinearLayout) layout.findViewById(R.id.content))
                         .removeAllViews();
             }
