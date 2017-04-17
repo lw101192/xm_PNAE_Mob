@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Looper;
+import android.support.annotation.WorkerThread;
 import android.text.TextUtils;
 import android.widget.Toast;
 
@@ -137,13 +138,10 @@ public class Client {
             conn.setHandler(new ClientHandler());
 //            conn.getSessionConfig().setIdleTime(IdleStatus.BOTH_IDLE,10);
             ConnectFuture future = conn.connect(new InetSocketAddress(getIpPort.getIpString(), Integer.parseInt(getIpPort.getPortString())));
-            System.out.println("IP:" + getIpPort.getIpString() + "  " + "PORT:" + Integer.parseInt(getIpPort.getPortString()));
             future.awaitUninterruptibly();
             session = future.getSession();
             isServerIsConnected = true;
-            System.out.println("连接服务器成功" + session.getLocalAddress());
         } catch (Exception e) {
-            System.out.println("连接服务器失败" + e);
             isServerIsConnected = false;
             callBack.onFaliure(0);
             if(UserFragment.handler!=null)
@@ -159,7 +157,6 @@ public class Client {
 //        public void keepAliveRequestTimedOut(KeepAliveFilter arg0,
 //                                             IoSession arg1) throws Exception {
 //            // TODO Auto-generated method stub
-//            System.out.println("心跳超时");
 //        }
 //
 //    }
@@ -174,7 +171,6 @@ public class Client {
 
         @Override
         public boolean isRequest(IoSession session, Object message) {
-            System.out.println("请求心跳包信息: " + message);
 //            if (message.equals(HEARTBEATREQUEST))
 //                return true;
             return false;
@@ -182,22 +178,17 @@ public class Client {
 
         @Override
         public boolean isResponse(IoSession session, Object message) {
-            System.out.println("响应心跳包信息: " + message);
-            if (message.equals(HEARTBEATRESPONSE))
-                return true;
-            return false;
+            return message.equals(HEARTBEATRESPONSE);
         }
 
         @Override
         public Object getRequest(IoSession session) {
-            System.out.println("请求预设信息: " + HEARTBEATREQUEST);
             /** 返回预设语句 */
             return HEARTBEATREQUEST;
         }
 
         @Override
         public Object getResponse(IoSession session, Object request) {
-            System.out.println("响应预设信息: " + HEARTBEATRESPONSE);
             /** 返回预设语句 */
 //            return HEARTBEATRESPONSE;
             return null;
@@ -219,13 +210,11 @@ public class Client {
     }
 
     private void _login(final MessageBean messageBean, final ClientCallBack callBack, final boolean autoLogin) {
-        System.out.println("_login");
 
         this.callBack = callBack;
         this.excute(new Runnable() {
             @Override
             public void run() {
-                System.out.println("Client.this.isServerIsConnected()>>>" + Client.this.isServerIsConnected());
                 if (!Client.this.isServerIsConnected()) {
                     connectServer();
                 }
@@ -244,17 +233,16 @@ public class Client {
         if (session != null) {
             session.write(messageBean);
         }
-        System.out.println("closenow" + session.getLocalAddress());
         closeNow(true);
 
 
     }
 
-    public void onSuccess(int var1, String var2) {
+    void onSuccess(int var1, String var2) {
         callBack.onSuccess(var1, var2);
     }
 
-    public void onFaliure(int var1) {
+    void onFaliure(int var1) {
         closeNow(true);
         callBack.onFaliure(var1);
     }
@@ -349,8 +337,7 @@ public class Client {
 
     public void onResopnse(MessageBean messageBean) {
         this.requestCallBack.Response(messageBean);
-        System.out.println("onResopnse" + shortConnnection);
-
+//
         if (shortConnnection) {
             closeNow(true);
             shortConnnection = false;
@@ -379,7 +366,6 @@ public class Client {
 //            }
 
 
-            System.out.println("网络是否可用" + isNetworkAvailable(var1) + Client.getInstance().isLogin());
             if (isNetworkAvailable(var1)) {
                 if (Client.getInstance().isLogin() && session == null)
                     MainActivity.handler.sendEmptyMessage(StaticVar.RELOGIN);

@@ -162,7 +162,6 @@ public class UserFragment extends Fragment implements View.OnClickListener {
                             CustomadeDialog.Builder builder = new CustomadeDialog.Builder(getActivity());
                             int localVersionCode = getVersionCode();
                             int remotVersionCode = jsonObject.getInt("versioncode");
-                            System.out.println("localVersionCode<remotVersionCode" + (localVersionCode < remotVersionCode));
                             if (localVersionCode < remotVersionCode) {
                                 builder.setTitle("发现新版本 " + jsonObject.getString("versionname")).setMessage(jsonObject.getString("info"))
                                         .setPositiveButton("下载", new DialogInterface.OnClickListener() {
@@ -246,16 +245,13 @@ public class UserFragment extends Fragment implements View.OnClickListener {
                                     if (messageBean.getContent().getContenttype().equals("filelength"))
                                         Client.getInstance().fileLength = Long.parseLong(messageBean.getContent().getStringcontent());
 
-                                    System.out.println("fileLength  " + Client.getInstance().fileLength);
                                 } else {
                                     try {
                                         File filePath = Environment.getExternalStorageDirectory();
                                         String savePath = filePath + "/" + "app.apk";
-                                        System.out.print("savePath>>" + savePath);
                                         FileOutputStream out = new FileOutputStream(savePath);
                                         FileChannel fc = out.getChannel();
                                         fc.write(ByteBuffer.wrap(messageBean.getContent().getBytecontent()));
-                                        System.out.println("文件接收完成");
                                         Message.obtain(handler, StaticVar.COMPLETE_DOWNLOAD, "app.apk").sendToTarget();
                                     } catch (Exception e) {
                                     }
@@ -453,7 +449,6 @@ public class UserFragment extends Fragment implements View.OnClickListener {
                             Message.obtain(handler, CHECKVERSION, jsonObject).sendToTarget();
 
                         } catch (Exception e) {
-                            System.out.println(e);
                         }
                     }
                 });

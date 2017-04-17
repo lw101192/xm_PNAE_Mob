@@ -217,7 +217,6 @@ public class Runtime_Acyivity extends AppCompatActivity implements MachineInfoFr
                         }
                         break;
                     case StaticVar.SYNCHRONOUS_RESULT_IMAGE:
-//                        System.out.println("msg.obj.length>>>"+msg.obj.toString().length());
 
                         if (msg.obj.toString().length() > 0) {
                             if (progressDialog != null) {
@@ -699,7 +698,6 @@ public class Runtime_Acyivity extends AppCompatActivity implements MachineInfoFr
                 Client.getInstance().sendRquestForResponse(messageBean, false, new RequestCallBack<MessageBean>() {
                     @Override
                     public void Response(MessageBean messageBean) {
-                        System.out.println("messageBean.getContent().getStringcontent()" + messageBean.getContent().getStringcontent());
                         switch (messageBean.getContent().getContenttype()) {
                             case "push":
 

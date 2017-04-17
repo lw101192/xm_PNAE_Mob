@@ -5,7 +5,7 @@ android {
     buildToolsVersion "24.0.0"
     defaultConfig {
         applicationId 'com.example.xm.finebiopane'
-        minSdkVersion 11
+        minSdkVersion 14
         targetSdkVersion 22
         versionCode 1
         versionName "1.0.0"
@@ -71,4 +71,5 @@ dependencies {
     compile files('libs/sun.misc.BASE64Decoder.jar')
     compile files('libs/mina-core-2.0.16.jar')
     compile files('libs/gson-2.7.jar')
+    compile 'com.wang.avi:library:2.1.3'
 }

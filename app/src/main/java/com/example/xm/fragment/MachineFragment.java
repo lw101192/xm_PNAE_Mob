@@ -41,6 +41,7 @@ import com.example.xm.util.DataBaseHelper;
 import com.example.xm.widget.CustomadeDialog;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshGridView;
+import com.wang.avi.AVLoadingIndicatorView;
 import com.xm.Bean.MessageBean;
 import com.xm.Bean.UserBean;
 
@@ -67,6 +68,8 @@ public class MachineFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private final int SHOW_LOADING=30;
+    private final int HIDE_LOADING=31;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -81,6 +84,7 @@ public class MachineFragment extends Fragment {
     private CustomadeDialog customadeDialog;
 
     SimpleDateFormat simpleDateFormat;
+    private AVLoadingIndicatorView avLoading;
 
     public MachineFragment() {
         // Required empty public constructsor
@@ -132,9 +136,18 @@ public class MachineFragment extends Fragment {
             @Override
             public void handleMessage(Message msg) {
                 switch (msg.what) {
+                    case SHOW_LOADING:
+                        avLoading.smoothToShow();
+                        break;
+                    case HIDE_LOADING:
+                        avLoading.smoothToHide();
+                        break;
                     case StaticVar.REFRESH_MACHINE_LIST:
+                        if(pullToRefreshGridView.isShown())
+                            pullToRefreshGridView.onRefreshComplete();
                         getdata(msg.obj);
                         saveDataToSql(data);
+//                        handler.sendEmptyMessage(HIDE_LOADING);
                         HistroyFragment.handler.sendEmptyMessage(StaticVar.REFRESH_HISTROY);
                         break;
                     case StaticVar.ADD_MACHINE:
@@ -301,31 +314,40 @@ public class MachineFragment extends Fragment {
 
         if (!Client.getInstance().isServerIsConnected()) {
             if (getActivity() != null)
-                Toast.makeText(getActivity(), "网络异常", Toast.LENGTH_SHORT).show();
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getActivity(), "网络异常", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
             return;
         }
-        try {
 //            MainActivity.client.sendFlag("querymymachine");
 //            String[] msg = new String[1];
 //            msg[0] = MainActivity.USERNAME;
 //            MainActivity.client.sendMsg(msg);
-            MessageBean messageBean = new MessageBean();
-            messageBean.setAction("querymymachine");
-            UserBean from = new UserBean();
-            from.setType("mob");
-            from.setId(Client.getInstance().getUserID());
-            messageBean.setFrom(from);
-            Client.getInstance().sendRquestForResponse(messageBean, false, new RequestCallBack<MessageBean>() {
+//            handler.sendEmptyMessage(SHOW_LOADING);
 
+
+            new Thread(new Runnable() {
                 @Override
-                public void Response(MessageBean messageBean) {
-                    handler.obtainMessage(StaticVar.REFRESH_MACHINE_LIST, messageBean.getContent().getStringcontent()).sendToTarget();
-                }
-            });
-        } catch (Exception e) {
-            System.out.println("requestMyMachine失败");
-        }
+                public void run() {
+                    MessageBean messageBean = new MessageBean();
+                    messageBean.setAction("querymymachine");
+                    UserBean from = new UserBean();
+                    from.setType("mob");
+                    from.setId(Client.getInstance().getUserID());
+                    messageBean.setFrom(from);
+                    Client.getInstance().sendRquestForResponse(messageBean, false, new RequestCallBack<MessageBean>() {
 
+                        @Override
+                        public void Response(MessageBean messageBean) {
+                            handler.obtainMessage(StaticVar.REFRESH_MACHINE_LIST, messageBean.getContent().getStringcontent()).sendToTarget();
+                        }
+                    });
+                }
+            }).start();
 
     }
 
@@ -333,14 +355,14 @@ public class MachineFragment extends Fragment {
     private void init(View view) {
 //
 
+//        avLoading  = (AVLoadingIndicatorView)view.findViewById(R.id.avLoading);
 
         pullToRefreshGridView = (PullToRefreshGridView) view.findViewById(R.id.pullToRefreshGridView);
         adapter = new MachineAdapter(getActivity(), data, R.layout.item_gridview);
         pullToRefreshGridView.setAdapter(adapter);
         pullToRefreshGridView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<GridView>() {
             @Override
-            public void onRefresh(
-                    PullToRefreshBase<GridView> refreshView) {
+            public void onRefresh(PullToRefreshBase<GridView> refreshView) {
                 String label = DateUtils.formatDateTime(
                         getActivity().getApplicationContext(),
                         System.currentTimeMillis(),
@@ -351,33 +373,53 @@ public class MachineFragment extends Fragment {
                 refreshView.getLoadingLayoutProxy()
                         .setLastUpdatedLabel(label);
 
-                new AsyncTask<Void, Void, Integer>() {
+//                new AsyncTask<Void, Void, Void>() {
+//                    @Override
+//                    protected Void doInBackground(Void... params) {
+//                        try {
+//                            requestMyMachine();
+//                        } catch (Exception e) {
+//                            e.printStackTrace();
+//                        }
+//                        return null;
+//                    }
+//
+//                    @Override
+//                    protected void onPostExecute(Void aVoid) {
+//                       pullToRefreshGridView.onRefreshComplete();
+//                    }
+//                }.execute();
 
-                    @Override
-                    protected Integer doInBackground(Void... params) {
-                        try {
-                            requestMyMachine();
-                            return 1;
-                        } catch (Exception e) {
-                            return 0;
-                        }
-
-
-                    }
-
-                    protected void onPostExecute(Integer result) {
-                        if (result == 1) {
-                            adapter.notifyDataSetChanged();
-                        } else {
-                            handler.sendEmptyMessage(StaticVar.REFRESH_HISTROY_FAILED);
-                        }
+                requestMyMachine();
 
 
-                        // 隐藏头布局
-                        pullToRefreshGridView.onRefreshComplete();
-                    }
-                }.execute(new Void[]{});
+//                new AsyncTask<Void, Void, Integer>() {
+//
+//                    @Override
+//                    protected Integer doInBackground(Void... params) {
+//                        try {
+//
+//                            return 1;
+//                        } catch (Exception e) {
+//                            return 0;
+//                        }
+//                    }
+//
+//                    protected void onPostExecute(Integer result) {
+//                        if (result == 1) {
+//                            adapter.notifyDataSetChanged();
+//                        } else {
+//                            handler.sendEmptyMessage(StaticVar.REFRESH_HISTROY_FAILED);
+//                        }
+//
+//
+//                        // 隐藏头布局
+//                        pullToRefreshGridView.onRefreshComplete();
+//                    }
+//                }.execute();
             }
+
+
         });
         pullToRefreshGridView.getRefreshableView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
 

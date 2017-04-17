@@ -62,6 +62,7 @@ public class WebView_Activity extends AppCompatActivity {
         webSettings.setCacheMode(WebSettings.LOAD_CACHE_ELSE_NETWORK);
         webSettings.setSupportZoom(true);
         webSettings.setBuiltInZoomControls(true);
+        webSettings.setSavePassword(false);
 
     }
 

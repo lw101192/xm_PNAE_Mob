@@ -132,7 +132,6 @@ public class MainActivity extends AppCompatActivity implements MachineFragment.O
 
         registerBroadCastReceiver();
 //        initSqliteHelper();
-//        System.out.println("mainactivity");
     }
 
     private void registerBroadCastReceiver() {
@@ -379,7 +378,6 @@ public class MainActivity extends AppCompatActivity implements MachineFragment.O
                 Client.getInstance().login(messageBean, new ClientCallBack() {
                     @Override
                     public void onSuccess(int var1, String var2) {
-                        System.out.println("onSuccess" + var1);
                         Client.getInstance().NewUser(preferences.getString("username", null));
                         handler.sendEmptyMessage(StaticVar.LOGIN_SUCCEED);
 
@@ -387,7 +385,6 @@ public class MainActivity extends AppCompatActivity implements MachineFragment.O
 
                     @Override
                     public void onFaliure(int var1) {
-                        System.out.println("onFaliure1");
                         handler.sendEmptyMessage(StaticVar.LOGIN_FAILED);
                     }
 
@@ -441,7 +438,6 @@ public class MainActivity extends AppCompatActivity implements MachineFragment.O
             Client.getInstance().login(messageBean, new ClientCallBack() {
                 @Override
                 public void onSuccess(int var1, String var2) {
-                    System.out.println("onSuccess" + var1);
                     Client.getInstance().NewUser(username);
                     handler.sendEmptyMessage(StaticVar.LOGIN_SUCCEED);
 
@@ -449,7 +445,6 @@ public class MainActivity extends AppCompatActivity implements MachineFragment.O
 
                 @Override
                 public void onFaliure(int var1) {
-                    System.out.println("onFaliure2");
                     handler.sendEmptyMessage(StaticVar.LOGIN_FAILED);
                 }
 
@@ -506,7 +501,6 @@ public class MainActivity extends AppCompatActivity implements MachineFragment.O
 
 
                             }
-                        System.out.println("启动重连线程");
                         ReLoginThread.getInstance().startReconnectionThread();      //启动重连线程
 //                        Toast.makeText(MainActivity.this, "登录失败", Toast.LENGTH_SHORT).show();
                         //intent = new Intent(MainActivity.this, Login_Activity.class);
@@ -573,10 +567,8 @@ public class MainActivity extends AppCompatActivity implements MachineFragment.O
                             MachineFragment.handler.sendEmptyMessage(StaticVar.REQUEST_MACHINE_LIST);
                         if (UserFragment.handler != null) {
                             UserFragment.handler.sendEmptyMessage(StaticVar.LOGIN_SUCCEED);
-                            System.out.println("sendEmptyMessage  UserFragment  LOGIN_SUCCEED");
                         }
 
-                        System.out.println("mainavtivity  LOGIN_SUCCEED");
 
                         break;
                     case StaticVar.RELOGIN:
@@ -1060,7 +1052,6 @@ public class MainActivity extends AppCompatActivity implements MachineFragment.O
         }
         unregisterReceiver(broadcastReceiver);
 
-        System.out.println("mainactivity onDestroy");
         super.onDestroy();
     }
 
@@ -1073,7 +1064,6 @@ public class MainActivity extends AppCompatActivity implements MachineFragment.O
     @Override
     protected void onStop() {
         super.onStop();
-        System.out.println("onStop");
     }
 
 

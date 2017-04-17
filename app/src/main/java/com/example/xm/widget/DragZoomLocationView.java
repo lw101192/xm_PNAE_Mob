@@ -75,7 +75,7 @@ public class DragZoomLocationView extends ImageView implements ScaleGestureDetec
                 new GestureDetector.SimpleOnGestureListener() {
                     @Override
                     public boolean onDoubleTap(MotionEvent e) {
-                        if (isAutoScale == true)
+                        if (isAutoScale)
                             return true;
 
                         float x = e.getX();
@@ -176,7 +176,6 @@ public class DragZoomLocationView extends ImageView implements ScaleGestureDetec
         float scale = getScale();
         float scaleFactor = detector.getScaleFactor();
 
-        System.out.println("scale:" + scale + " focusX:" + detector.getFocusX() + " focusY:" + detector.getFocusY());
 
         if (getDrawable() == null)
             return true;
@@ -211,14 +210,11 @@ public class DragZoomLocationView extends ImageView implements ScaleGestureDetec
      */
     private void checkBorderAndCenterWhenScale() {
         RectF rect = getMatrixRectF();
-        System.out.println("rect.left:" + rect.left + " rect.right:" + rect.right);
-        System.out.println("rect.width:" + rect.width() + " rect.height:" + rect.height());
         float deltaX = 0;
         float deltaY = 0;
 
         int width = getWidth();
         int height = getHeight();
-        System.out.println("width:" + getWidth() + " height:" + getHeight());
 
         // 如果宽或高大于屏幕，则控制范围
         if (rect.width() >= width) {
@@ -261,7 +257,6 @@ public class DragZoomLocationView extends ImageView implements ScaleGestureDetec
         if (d != null) {
 
             rect.set(0, 0, d.getIntrinsicWidth(), d.getIntrinsicHeight());
-            System.out.println("getIntrinsicWidth:" + d.getIntrinsicWidth() + " getIntrinsicHeight:" + d.getIntrinsicHeight());
             matrix.mapRect(rect);
         }
         return rect;
@@ -281,7 +276,6 @@ public class DragZoomLocationView extends ImageView implements ScaleGestureDetec
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-        System.out.println("onTouch");
 
         if (mGestureDetector.onTouchEvent(event))
             return true;
@@ -293,7 +287,6 @@ public class DragZoomLocationView extends ImageView implements ScaleGestureDetec
         float x = 0, y = 0;
         // 拿到触摸点的个数
         final int pointerCount = event.getPointerCount();
-        System.out.println("pointerCount:" + pointerCount);
 //        if(pointerCount==1){
 //
 //            getParent().requestDisallowInterceptTouchEvent(true);
@@ -416,12 +409,6 @@ public class DragZoomLocationView extends ImageView implements ScaleGestureDetec
 
     public void getTouchParams() {
         RectF rect = getMatrixRectF();
-        System.out.println("rect.left:" + rect.left + " rect.top:" + rect.top);
-        System.out.println("rect.width:" + rect.width() + " rect.height:" + rect.height());
-        System.out.println("width:" + getWidth() + " height:" + getHeight());
-        System.out.println("start_X:" + start_X + " start_Y" + start_Y);
-
-        System.out.println("x坐标：" + 800 * (start_X - rect.left) / rect.width() + " y坐标:" + 480 * (start_Y - rect.top) / rect.height());
 
         StringBuffer sb = new StringBuffer();
         if (touchMode == TAP) {
@@ -437,7 +424,6 @@ public class DragZoomLocationView extends ImageView implements ScaleGestureDetec
             sb.append(480 * (stop_Y - rect.top) / rect.height());
         }
         Message.obtain(MachineStatusFragment.handler, StaticVar.SEND_MESSAGE, sb.toString()).sendToTarget();
-        System.out.println(sb.toString());
     }
 
     /**

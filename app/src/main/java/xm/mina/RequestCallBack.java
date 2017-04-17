@@ -7,5 +7,5 @@ import com.xm.Bean.MessageBean;
  */
 
 public interface RequestCallBack<T> {
-    void Response(T messageBean);
+    void Response(T message);
 }

@@ -35,7 +35,6 @@ public class ExpandableLayout extends LinearLayout {
         if (this.mContentHeight == 0) {
             this.mContentView.measure(widthMeasureSpec, 0);
             this.mContentHeight = this.mContentView.getHeight();
-            System.out.println("mContentHeight>" + this.mContentHeight);
         }
         if (this.mTitleHeight == 0) {
             this.mHandleView.measure(widthMeasureSpec, 0);
@@ -65,7 +64,6 @@ public class ExpandableLayout extends LinearLayout {
                 if (animationUp == null) {
                     animationUp = new DropDownAnim(mContentView,
                             mContentHeight, false);
-                    System.out.println("mContentHeight>>>" + mContentHeight);
                     animationUp.setDuration(300); // SUPPRESS CHECKSTYLE
                 }
                 startAnimation(animationUp);

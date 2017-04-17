@@ -44,3 +44,5 @@
 -keep class * implements android.os.Parcelable { # 保持 Parcelable 不被混淆
     public static final android.os.Parcelable$Creator *;
 }
+-keep class com.wang.avi.** { *; }
+-keep class com.wang.avi.indicators.** { *; }

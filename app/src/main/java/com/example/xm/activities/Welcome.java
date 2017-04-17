@@ -20,7 +20,10 @@ import com.example.xm.finebiopane.R;
 import xm.mina.Client;
 
 import com.example.xm.util.Util;
+import com.google.gson.Gson;
+import com.xm.Bean.ContentBean;
 import com.xm.Bean.MessageBean;
+import com.xm.Bean.UserBean;
 
 import org.json.JSONObject;
 
@@ -48,6 +51,7 @@ public class Welcome extends AppCompatActivity implements View.OnClickListener {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
 
         if (isPendingIntentAvailable()) {
             Intent i = new Intent(getApplicationContext(), MainActivity.class);
@@ -101,7 +105,6 @@ public class Welcome extends AppCompatActivity implements View.OnClickListener {
                                 try {
                                     JSONObject jsonObject = new JSONObject(Util.ReadFromFile(Welcome.this, "version.txt"));       //获取本地MobAPPVersionInfo.txt
                                     originallink = jsonObject.getString("welcomelogolink");
-                                    System.out.println("originallink>>>" + originallink);
                                 } catch (Exception e) {
                                 }
                                 if (infoJson != null)

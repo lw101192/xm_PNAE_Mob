@@ -77,9 +77,7 @@ public class MyObjectSerializationDecoder extends CumulativeProtocolDecoder {
     @Override
     protected boolean doDecode(IoSession session, IoBuffer in, ProtocolDecoderOutput out) throws Exception {
         if(Client.getInstance().fileLength!=0)
-//        System.out.println("decode 进度  "+(int)((float)in.limit()/Client.getInstance().fileLength*100)+"%");
         Message.obtain(UserFragment.handler, StaticVar.UPDATE_DOWNLOAD_PERCENT,in.limit(),(int)Client.getInstance().fileLength).sendToTarget();
-//        System.out.println("decode 进度  "+in.limit()+"  totallength:"+Client.getInstance().fileLength);
         if (!in.prefixedDataAvailable(4, maxObjectSize)) {
             return false;
         }

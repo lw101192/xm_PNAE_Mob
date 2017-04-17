@@ -158,7 +158,6 @@ public class MachineStatusFragment extends Fragment {
                         img.setImageResource(0);
                         imglayout.setVisibility(View.GONE);
 
-                        System.out.println("StaticVar.SYNCHRONOUS_RESULT" + msg.obj.toString());
                         JSONObject jsonObject = (JSONObject) msg.obj;
                         try {
                             switch (jsonObject.get("paramstype").toString()) {

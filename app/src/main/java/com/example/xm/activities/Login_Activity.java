@@ -38,19 +38,19 @@ import com.xm.Bean.UserBean;
 
 public class Login_Activity extends Activity implements OnClickListener {
 
-    public static Button userlogin;
-    public static Button register;
-    public static Button forget;
+    public  Button userlogin;
+    public  Button register;
+    public  Button forget;
     private Button feedback;
-    private static EditText tel;
-    private static EditText password;
-    private static CheckBox user_remember;
-    private static CheckBox user_autologin;
+    private  EditText tel;
+    private  EditText password;
+    private  CheckBox user_remember;
+    private  CheckBox user_autologin;
 
     private static Toast toast;
     SharedPreferences sharepreferences;
     static Editor editor;
-    public static LinearLayout passwordlayout;
+    public  LinearLayout passwordlayout;
     public static Handler loginhandler;
     public static ProgressDialog progressdialog;
     //    static boolean atThisActivity = false;
@@ -83,6 +83,7 @@ public class Login_Activity extends Activity implements OnClickListener {
 
         sharepreferences = getSharedPreferences("config", MODE_PRIVATE);
         editor = sharepreferences.edit();
+        editor.commit();
 
         passwordlayout = (LinearLayout) findViewById(R.id.passwordlayout);
 
@@ -244,7 +245,6 @@ public class Login_Activity extends Activity implements OnClickListener {
         Client.getInstance().login(messageBean, new ClientCallBack() {
             @Override
             public void onSuccess(int var1, String var2) {
-                System.out.println("onSuccess" + var1);
                 Client.getInstance().NewUser(uname);
                 loginhandler.sendEmptyMessage(StaticVar.LOGIN_SUCCEED);
 
@@ -252,7 +252,6 @@ public class Login_Activity extends Activity implements OnClickListener {
 
             @Override
             public void onFaliure(int var1) {
-                System.out.println("Client.getInstance() onFaliure");
                 loginhandler.sendEmptyMessage(StaticVar.LOGIN_FAILED);
             }
 

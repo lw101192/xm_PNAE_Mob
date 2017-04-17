@@ -9,6 +9,17 @@
         android:id="@+id/pullToRefreshGridView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:numColumns="3"></com.handmark.pulltorefresh.library.PullToRefreshGridView>
+        android:numColumns="3" />
+
+    <!--<com.wang.avi.AVLoadingIndicatorView-->
+    <!--android:id="@+id/avLoading"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--style="@style/AVLoadingIndicatorView"-->
+    <!--android:visibility="visible"-->
+    <!--app:indicatorName="BallPulseIndicator"-->
+    <!--app:indicatorColor="#34b3ed"-->
+    <!--android:layout_gravity="center"-->
+    <!--/>-->
 
 </FrameLayout>

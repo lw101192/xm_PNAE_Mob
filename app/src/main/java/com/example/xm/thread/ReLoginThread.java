@@ -8,7 +8,7 @@ import com.example.xm.bean.StaticVar;
  */
 public class ReLoginThread extends Thread {
 
-    static ReLoginThread reLoginThread;
+    private static ReLoginThread reLoginThread;
     private int waiting = 0;
     private static boolean flag = false;
 
@@ -32,7 +32,6 @@ public class ReLoginThread extends Thread {
                 if (flag)
                     MainActivity.handler.sendEmptyMessage(StaticVar.RELOGIN);
                 waiting++;
-                System.out.println("ReconnectionThread  run");
             }
         } catch (final InterruptedException e) {
 //            xmppManager.getHandler().post(new Runnable() {
@@ -45,7 +44,7 @@ public class ReLoginThread extends Thread {
 
 
     public void startReconnectionThread() {
-        synchronized (reLoginThread) {
+        synchronized (ReLoginThread.class) {
             if (reLoginThread != null && !reLoginThread.isAlive() && !flag) {
                 flag = true;
                 reLoginThread.start();
@@ -56,7 +55,6 @@ public class ReLoginThread extends Thread {
     public void stopReconnectionThread() {
         flag = false;
         reLoginThread = null;
-        System.out.println("stopReconnectionThread");
     }
 
     private int waiting() {

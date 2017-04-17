@@ -162,7 +162,6 @@ public class MachineInfoFragment extends Fragment {
         Cursor cursor = sqliteDatabase.rawQuery("select lastsynchronizetime from mymachine where id=?", new String[]{mParam1});
         if (cursor.moveToNext()) {
             lastSynchronizeTime.setText(cursor.getString(cursor.getColumnIndex("lastsynchronizetime")));
-//            System.out.println("lastsynchronizetime"+cursor.getString(cursor.getColumnIndex("lastsynchronizetime")));
         }
         cursor.close();
         sqliteDatabase.close();

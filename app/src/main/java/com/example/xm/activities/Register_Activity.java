@@ -410,7 +410,6 @@ public class Register_Activity extends AppCompatActivity implements OnClickListe
                 Client.getInstance().sendRquestForResponse(messageBean, true, new RequestCallBack<MessageBean>() {
                     @Override
                     public void Response(MessageBean messageBean) {
-                        System.out.println("checkResponse" + messageBean.getAckcode());
                         if (messageBean.getAckcode() == 1) {
                             handler2.sendEmptyMessage(2);
                         } else {

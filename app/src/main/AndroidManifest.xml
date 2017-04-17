@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.xm.finebiopane">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -7,7 +8,6 @@
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
     <uses-permission android:name="android.permission.GET_TASKS" />
@@ -19,8 +19,9 @@
     <uses-feature android:name="android.hardware.camera.autofocus" />
 
     <application
+        tools:replace="android:allowBackup"
         android:name="com.example.xm.util.MyApplication"
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:configChanges="screenSize|orientation"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -41,38 +42,47 @@
             android:name="com.example.xm.activities.MainActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
+            android:exported="false"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name="com.example.xm.activities.Register_Activity"
             android:screenOrientation="portrait"
+            android:exported="false"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name="com.example.xm.activities.ChangePassword_Activity"
             android:screenOrientation="portrait"
+            android:exported="false"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name="com.example.xm.activities.Repair_Activity"
             android:screenOrientation="portrait"
+            android:exported="false"
             android:windowSoftInputMode="stateHidden|adjustPan" />
         <activity
             android:name="com.example.xm.activities.FeedBack_Activity"
             android:screenOrientation="portrait"
+            android:exported="false"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name="com.example.xm.activities.WebView_Activity"
             android:screenOrientation="portrait"
+            android:exported="false"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name="com.example.xm.CodeScan.MipcaActivityCapture"
             android:screenOrientation="portrait"
+            android:exported="false"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name="com.example.xm.activities.Login_Activity"
             android:screenOrientation="portrait"
+            android:exported="false"
             android:windowSoftInputMode="stateHidden" />
         <activity
             android:name="com.example.xm.activities.Runtime_Acyivity"
             android:screenOrientation="portrait"
+            android:exported="false"
             android:windowSoftInputMode="stateHidden" />
 
         <service android:name="com.example.xm.service.ListenerService"/>
