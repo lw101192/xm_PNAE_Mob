@@ -27,6 +27,7 @@ import com.example.xm.finebiopane.R;
 
 import xm.mina.Client;
 
+import com.example.xm.widget.PasswordDialog;
 import com.xm.Bean.MessageBean;
 import com.xm.Bean.UserBean;
 
@@ -36,11 +37,9 @@ import cn.smssdk.SMSSDK;
 
 public class ChangePassword_Activity extends AppCompatActivity implements OnClickListener {
 
-    Button submit_btn;
     EditText newpasssword;
     EditText repeatpasssword;
     EditText registerphone;
-    EditText idcode;
     Button requestCodeBtn;
     int i = 30;
     private Intent intent;
@@ -48,6 +47,7 @@ public class ChangePassword_Activity extends AppCompatActivity implements OnClic
     private TextView title;
     private TextView complete;
     private boolean shortConnnection = false;
+    private PasswordDialog passwordDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,12 +73,9 @@ public class ChangePassword_Activity extends AppCompatActivity implements OnClic
         newpasssword = (EditText) findViewById(R.id.newPassword);
         repeatpasssword = (EditText) findViewById(R.id.repeatPassword);
         registerphone = (EditText) findViewById(R.id.phonenumber);
-        idcode = (EditText) findViewById(R.id.idcode);
         requestCodeBtn = (Button) findViewById(R.id.request_code_btn);
-        submit_btn = (Button) findViewById(R.id.Submit_btn);
 
         requestCodeBtn.setOnClickListener(this);
-        submit_btn.setOnClickListener(this);
 
         registerphone.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -105,7 +102,7 @@ public class ChangePassword_Activity extends AppCompatActivity implements OnClic
      */
     private void initSMSSDK() {
         // TODO Auto-generated method stub
-        SMSSDK.initSDK(this, "1586ad59f5526", "4541afc482f856e86b218fc917c30549");
+        SMSSDK.initSDK(this, "1d1bb243dfc34", "116ad1e9b950862f6bcc1c20d28b290f");
         EventHandler eventHandler = new EventHandler() {
             @Override
             public void afterEvent(int event, int result, Object data) {
@@ -132,6 +129,7 @@ public class ChangePassword_Activity extends AppCompatActivity implements OnClic
                     registerphone.setError(null);
                     break;
                 case 3:
+                    passwordDialog.dismiss();
                     Toast.makeText(ChangePassword_Activity.this, "修改成功,重新登录", Toast.LENGTH_SHORT).show();
                     SharedPreferences sharepreferences = getSharedPreferences("config", MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharepreferences.edit();
@@ -146,7 +144,7 @@ public class ChangePassword_Activity extends AppCompatActivity implements OnClic
                         UserBean from = new UserBean();
                         from.setId(Client.getInstance().getUserID());
                         messageBean.setFrom(from);
-                        Client.getInstance().sendRquest(shortConnnection, messageBean);
+                        Client.getInstance().logout(messageBean);
                     } catch (Exception e) {
                         // TODO: handle exception
                     }
@@ -189,9 +187,10 @@ public class ChangePassword_Activity extends AppCompatActivity implements OnClic
                     if (event == SMSSDK.EVENT_SUBMIT_VERIFICATION_CODE) {// 提交验证码成功
                         Toast.makeText(getApplicationContext(), "验证成功",
                                 Toast.LENGTH_SHORT).show();
-
+                        passwordDialog.dismiss();
                         ChangePasswordThread thread = new ChangePasswordThread(registerphone.getText().toString(), newpasssword.getText().toString());
                         thread.start();
+
                     } else if (event == SMSSDK.EVENT_GET_VERIFICATION_CODE) {
                         Toast.makeText(getApplicationContext(), "验证码已经发送，请查收",
                                 Toast.LENGTH_SHORT).show();
@@ -209,7 +208,7 @@ public class ChangePassword_Activity extends AppCompatActivity implements OnClic
 
     @Override
     public void onClick(View v) {
-        String phoneNums = registerphone.getText().toString();
+        final String phoneNums = registerphone.getText().toString();
         switch (v.getId()) {
             case R.id.request_code_btn:
                 // 1. 通过规则判断手机号
@@ -217,8 +216,19 @@ public class ChangePassword_Activity extends AppCompatActivity implements OnClic
 
                 // 1. 通过规则判断手机号
                 if (!judgePhoneNums(phoneNums) || TextUtils.isEmpty(newpasssword.getText())) {
-                    Toast.makeText(this, "请检查手机号和密码是否输入正确！", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "请检查密码是否输入正确！", Toast.LENGTH_SHORT).show();
                     return;
+                }
+
+                if (TextUtils.isEmpty(newpasssword.getText())||TextUtils.isEmpty(repeatpasssword.getText())) {
+                    Toast.makeText(getApplicationContext(), "密码不能为空",
+                            Toast.LENGTH_SHORT).show();
+                    break;
+                }
+                if (!newpasssword.getText().toString().equals(repeatpasssword.getText().toString())) {
+                    Toast.makeText(getApplicationContext(), "两次输入不一致",
+                            Toast.LENGTH_SHORT).show();
+                    break;
                 }
             /*
              * if (!judgePhoneNums(phoneNums)) { return; }
@@ -245,22 +255,17 @@ public class ChangePassword_Activity extends AppCompatActivity implements OnClic
                         handler.sendEmptyMessage(-8);
                     }
                 }).start();
+                passwordDialog = new PasswordDialog(ChangePassword_Activity.this);
+                passwordDialog.show();
+                passwordDialog.setTitle("请输入验证码");
+                passwordDialog.setOnFinishInput(new PasswordDialog.OnPasswordInputFinish() {
+                    @Override
+                    public void inputFinish() {
+                        SMSSDK.submitVerificationCode("86", phoneNums,passwordDialog.getPassword());
+                    }
+                });
                 break;
 
-            case R.id.Submit_btn:
-                if (TextUtils.isEmpty(newpasssword.getText())) {
-                    Toast.makeText(getApplicationContext(), "密码不能为空",
-                            Toast.LENGTH_SHORT).show();
-                    break;
-                }
-                if (!newpasssword.getText().toString().equals(repeatpasssword.getText().toString())) {
-                    Toast.makeText(getApplicationContext(), "两次输入不一致",
-                            Toast.LENGTH_SHORT).show();
-                    break;
-                }
-                SMSSDK.submitVerificationCode("86", phoneNums, idcode.getText()
-                        .toString());
-                break;
             case R.id.tv_config:
                 View view = getWindow().peekDecorView();
                 if (view != null) {
@@ -357,6 +362,7 @@ public class ChangePassword_Activity extends AppCompatActivity implements OnClic
                 messageBean.setAction("changepassword");
                 UserBean from = new UserBean();
                 from.setId(tel);
+                from.setNewpw(password);
                 messageBean.setFrom(from);
                 Client.getInstance().sendRquestForResponse(messageBean, shortConnnection, new RequestCallBack<MessageBean>() {
                     @Override
@@ -387,13 +393,13 @@ public class ChangePassword_Activity extends AppCompatActivity implements OnClic
 //                }
             } catch (Exception e) {
                 // TODO: handle exception
-                try {
-                    sleep(2000);
-                    handler2.sendEmptyMessage(4);
-                } catch (InterruptedException e1) {
-                    // TODO Auto-generated catch block
-                    e1.printStackTrace();
-                }
+//                try {
+//                    sleep(2000);
+//                    handler2.sendEmptyMessage(4);
+//                } catch (InterruptedException e1) {
+//                    // TODO Auto-generated catch block
+//                    e1.printStackTrace();
+//                }
 
             }
         }

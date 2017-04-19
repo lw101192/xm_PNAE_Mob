@@ -165,7 +165,7 @@ public class Login_Activity extends Activity implements OnClickListener {
 //            user_autologin.setEnabled(false);
 //        }
 
-        Intent intent = getIntent();
+//        Intent intent = getIntent();
 //        if (intent.getAction() != null && intent.getAction().equals("offline")) {
 ////            if (userlogin.getText().toString().equals("注销"))
 ////                Login_Activity.userlogin.performClick();

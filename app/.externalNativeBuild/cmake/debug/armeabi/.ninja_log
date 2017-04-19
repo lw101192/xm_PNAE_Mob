@@ -1,3 +1,7 @@
 # ninja log v5
-1	71	0	CMakeFiles/IpPort.dir/src/main/jni/com_example_xm_util_GetIpPort.c.o	ed4217b9c6ab5949
-71	133	0	../../../../build/intermediates/cmake/debug/obj/armeabi/libIpPort.so	c3205eb07e6ac4b6
+0	73	0	CMakeFiles/IpPort.dir/src/main/jni/com_example_xm_util_GetIpPort.c.o	32e6c05c6bb8f804
+73	135	0	../../../../build/intermediates/cmake/debug/obj/armeabi/libIpPort.so	c3205eb07e6ac4b6
+1	82	0	CMakeFiles/IpPort.dir/src/main/jni/com_example_xm_util_GetIpPort.c.o	32e6c05c6bb8f804
+82	162	0	../../../../build/intermediates/cmake/debug/obj/armeabi/libIpPort.so	c3205eb07e6ac4b6
+0	82	0	CMakeFiles/IpPort.dir/src/main/jni/com_example_xm_util_GetIpPort.c.o	32e6c05c6bb8f804
+82	159	0	../../../../build/intermediates/cmake/debug/obj/armeabi/libIpPort.so	c3205eb07e6ac4b6

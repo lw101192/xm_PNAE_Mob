@@ -28,6 +28,7 @@ import com.example.xm.finebiopane.R;
 
 import xm.mina.Client;
 
+import com.example.xm.widget.PasswordDialog;
 import com.xm.Bean.MessageBean;
 import com.xm.Bean.UserBean;
 
@@ -37,15 +38,14 @@ import cn.smssdk.SMSSDK;
 
 public class Register_Activity extends AppCompatActivity implements OnClickListener {
 
-    Button register_btn;
     EditText registerpasssword;
     EditText registerphone;
-    EditText idcode;
     Button requestCodeBtn;
     int i = 30;
     private Toolbar toolbar;
     private TextView title;
     private TextView complete;
+    private PasswordDialog passwordDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,11 +93,8 @@ public class Register_Activity extends AppCompatActivity implements OnClickListe
         // TODO Auto-generated method stub
         registerpasssword = (EditText) findViewById(R.id.registerPassword);
         registerphone = (EditText) findViewById(R.id.phonenumber);
-        idcode = (EditText) findViewById(R.id.idcode);
         requestCodeBtn = (Button) findViewById(R.id.request_code_btn);
-        register_btn = (Button) findViewById(R.id.Register_btn);
         requestCodeBtn.setOnClickListener(this);
-        register_btn.setOnClickListener(this);
 
         registerphone.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -121,7 +118,7 @@ public class Register_Activity extends AppCompatActivity implements OnClickListe
 
     private void initSMSSDK() {
         // TODO Auto-generated method stub
-        SMSSDK.initSDK(this, "1586c90098160", "e62c8f1639972c94b56eaa6f971597b9");
+        SMSSDK.initSDK(this, "1d1bb243dfc34", "116ad1e9b950862f6bcc1c20d28b290f");
         EventHandler eventHandler = new EventHandler() {
             @Override
             public void afterEvent(int event, int result, Object data) {
@@ -153,6 +150,7 @@ public class Register_Activity extends AppCompatActivity implements OnClickListe
                     break;
                 case 3:
                     Toast.makeText(Register_Activity.this, "注册成功", Toast.LENGTH_SHORT).show();
+                    finish();
                     break;
                 case 4:
                     Toast.makeText(Register_Activity.this, "注册失败", Toast.LENGTH_SHORT).show();
@@ -187,6 +185,7 @@ public class Register_Activity extends AppCompatActivity implements OnClickListe
                         Toast.makeText(getApplicationContext(), "提交验证码成功",
                                 Toast.LENGTH_SHORT).show();
 
+                        passwordDialog.dismiss();
                         RegisterThread thread = new RegisterThread(registerphone.getText().toString(), registerpasssword.getText().toString());
                         thread.start();
                     } else if (event == SMSSDK.EVENT_GET_VERIFICATION_CODE) {
@@ -206,7 +205,7 @@ public class Register_Activity extends AppCompatActivity implements OnClickListe
 
     @Override
     public void onClick(View v) {
-        String phoneNums = registerphone.getText().toString();
+        final String phoneNums = registerphone.getText().toString();
         switch (v.getId()) {
             case R.id.request_code_btn:
                 // 1. 通过规则判断手机号
@@ -242,12 +241,16 @@ public class Register_Activity extends AppCompatActivity implements OnClickListe
                         handler.sendEmptyMessage(-8);
                     }
                 }).start();
-                break;
 
-            case R.id.Register_btn:
-                SMSSDK.submitVerificationCode("86", phoneNums, idcode.getText()
-                        .toString());
-
+                passwordDialog = new PasswordDialog(Register_Activity.this);
+                passwordDialog.show();
+                passwordDialog.setTitle("请输入验证码");
+                passwordDialog.setOnFinishInput(new PasswordDialog.OnPasswordInputFinish() {
+                    @Override
+                    public void inputFinish() {
+                        SMSSDK.submitVerificationCode("86", phoneNums,passwordDialog.getPassword());
+                    }
+                });
                 break;
 
         }
